@@ -1,15 +1,15 @@
 package com.example.cli;
 
 import com.example.warehouse.*;
+import com.example.warehouse.export.CsvExporter;
 import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.ExporterException;
+import com.example.warehouse.export.TxtExporter;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public final class Cli implements Runnable {
 
@@ -71,10 +71,15 @@ public final class Cli implements Runnable {
         4, REPORT_OPTIONS
     );
 
-    private static final List<MenuOption> EXPORT_OPTIONS = List.of(
-        new MenuOption(1, "Export to TXT"),
-        new MenuOption(2, "Go back to previous menu")
-    );
+    private static final List<MenuOption> EXPORT_OPTIONS = new ArrayList<>();
+
+    static {
+        Exporter.ExportType[] types = Exporter.ExportType.values();
+        IntStream.range(0, types.length)
+            .mapToObj(i -> new MenuOption(i + 1, "Export to " + types[i].name()))
+            .forEach(EXPORT_OPTIONS::add);
+        EXPORT_OPTIONS.add(new MenuOption(EXPORT_OPTIONS.size() + 1, "Go back to previous menu"));
+    }
 
     private final List<String> args;
 
@@ -234,7 +239,15 @@ public final class Cli implements Runnable {
         if (exportMenuChoice == -1) {
             return;
         }
-        Exporter exporter = new Exporter(report, out);
+        Exporter.ExportType type = Exporter.ExportType.values()[exportMenuChoice - 1];
+        Exporter exporter;
+        if (type == Exporter.ExportType.CSV) {
+            exporter = new CsvExporter(report, out, true);
+        } else if (type == Exporter.ExportType.TXT) {
+            exporter = new TxtExporter(report, out);
+        } else {
+            throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", type));
+        }
         exporter.export();
     }
 
