@@ -27,11 +27,11 @@ public final class Report {
         return records;
     }
 
-    public void addLabel(String label) {
+    void addLabel(String label) {
         labels.add(label);
     }
 
-    public void addRecord(List<Object> record) {
+    void addRecord(List<Object> record) {
         records.add(record.stream()
             .map(String::valueOf)
             .collect(toList()));
