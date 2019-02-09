@@ -2,7 +2,6 @@ package com.example.cli;
 
 import com.example.warehouse.*;
 import com.example.warehouse.export.Exporter;
-import com.example.warehouse.export.ExporterException;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -112,7 +111,7 @@ public final class Cli implements Runnable {
                         doMenuAction(mainMenuChoice, subMenuChoice);
                     } catch (NumberFormatException ex) {
                         System.err.println("Invalid input. Enter a number.");
-                    } catch (IllegalArgumentException | UnsupportedOperationException | ExporterException ex) {
+                    } catch (IllegalArgumentException | UnsupportedOperationException ex) {
                         System.err.println(ex.getMessage());
                     }
                 }
@@ -162,7 +161,7 @@ public final class Cli implements Runnable {
         return choice;
     }
 
-    private void doMenuAction(int mainMenuChoice, int subMenuChoice) throws ExporterException {
+    private void doMenuAction(int mainMenuChoice, int subMenuChoice) {
         if (mainMenuChoice == 1) {
             doProductAction(subMenuChoice);
         } else if (mainMenuChoice == 2) {
@@ -218,7 +217,7 @@ public final class Cli implements Runnable {
         }
     }
 
-    private void doReportAction(int subMenuChoice) throws ExporterException {
+    private void doReportAction(int subMenuChoice) {
         Report report;
         if (subMenuChoice == 1) {
             report = warehouse.generateDailyRevenueReport(Report.Type.DAILY_REVENUE);
@@ -228,7 +227,7 @@ public final class Cli implements Runnable {
         doReportExport(report, System.out);
     }
 
-    private void doReportExport(Report report, PrintStream out) throws ExporterException {
+    private void doReportExport(Report report, PrintStream out) {
         displayMenu(EXPORT_OPTIONS);
         int exportMenuChoice = chooseMenuOption(EXPORT_OPTIONS);
         if (exportMenuChoice == -1) {

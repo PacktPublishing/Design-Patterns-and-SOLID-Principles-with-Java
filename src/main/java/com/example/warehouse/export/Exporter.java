@@ -32,7 +32,7 @@ public final class Exporter {
             + RIGHT_BORDER.length();
     }
 
-    public void export() throws ExporterException {
+    public void export() {
         printBorder();
         printStrings(report.getLabels());
         printBorder();
