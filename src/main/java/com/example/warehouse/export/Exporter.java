@@ -7,5 +7,5 @@ public interface Exporter {
         CSV
     }
 
-    void export() throws ExporterException;
+    void export();
 }

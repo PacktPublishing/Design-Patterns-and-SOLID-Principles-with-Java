@@ -3,7 +3,6 @@ package com.example.warehouse.export;
 import com.example.warehouse.Report;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
 
 abstract class AbstractExporter implements Exporter {
@@ -11,27 +10,9 @@ abstract class AbstractExporter implements Exporter {
     private final Report report;
     private final PrintStream out;
 
-    protected final List<Integer> widths;
-
     AbstractExporter(Report report, PrintStream out) {
         this.report = report;
         this.out = out;
-        this.widths = calcWidths();
-    }
-
-    private List<Integer> calcWidths() {
-        List<Integer> widths = new ArrayList<>();
-        report.getLabels().forEach(l -> widths.add(l.length()));
-        for (List<String> record : report.getRecords()) {
-            for (int i = 0; i < widths.size(); i++) {
-                int maxWidth = widths.get(i);
-                int width = record.get(i).length();
-                if (width > maxWidth) {
-                    widths.set(i, width);
-                }
-            }
-        }
-        return widths;
     }
 
     public final void export() {
