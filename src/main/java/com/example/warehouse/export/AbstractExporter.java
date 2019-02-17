@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class AbstractExporter {
 
     private final Report report;
-    protected final PrintStream out;
+    private final PrintStream out;
 
     AbstractExporter(Report report, PrintStream out) {
         this.report = report;
@@ -16,41 +16,41 @@ public abstract class AbstractExporter {
     }
 
     public final void export() {
-        beforeLabels();
-        handleLabels(report.getLabels());
-        afterLabels();
+        beforeLabels(out);
+        handleLabels(out, report.getLabels());
+        afterLabels(out);
 
-        beforeRecords();
+        beforeRecords(out);
         handleRecords();
-        afterRecords();
+        afterRecords(out);
     }
 
-    protected void beforeLabels() {
+    protected void beforeLabels(PrintStream out) {
     }
 
-    protected abstract void handleLabels(List<String> labels);
+    protected abstract void handleLabels(PrintStream out, List<String> labels);
 
-    protected void afterLabels() {
+    protected void afterLabels(PrintStream out) {
     }
 
-    protected void beforeRecords() {
+    protected void beforeRecords(PrintStream out) {
     }
 
     private void handleRecords() {
         List<List<String>> records = report.getRecords();
         if (records.size() == 1) {
-            handleRecord(records.get(0), true, true);
+            handleRecord(out, records.get(0), true, true);
         } else if (records.size() >= 2) {
-            handleRecord(records.get(0), true, false);
+            handleRecord(out, records.get(0), true, false);
             for (List<String> record : records.subList(1, records.size() - 1)) {
-                handleRecord(record, false, false);
+                handleRecord(out, record, false, false);
             }
-            handleRecord(records.get(records.size() - 1), false, true);
+            handleRecord(out, records.get(records.size() - 1), false, true);
         }
     }
 
-    protected abstract void handleRecord(List<String> records, boolean first, boolean last);
+    protected abstract void handleRecord(PrintStream out, List<String> records, boolean first, boolean last);
 
-    protected void afterRecords() {
+    protected void afterRecords(PrintStream out) {
     }
 }
