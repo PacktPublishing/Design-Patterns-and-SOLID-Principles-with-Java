@@ -1,7 +1,7 @@
 package com.example.cli;
 
 import com.example.warehouse.*;
-import com.example.warehouse.export.Exporter;
+import com.example.warehouse.export.TxtExporter;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -233,7 +233,7 @@ public final class Cli implements Runnable {
         if (exportMenuChoice == -1) {
             return;
         }
-        Exporter exporter = new Exporter(report, out);
+        TxtExporter exporter = new TxtExporter(report, out);
         exporter.export();
     }
 

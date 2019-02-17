@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class Exporter extends AbstractExporter {
+public final class TxtExporter extends AbstractExporter {
 
     private static final String BORDER = "*";
     private static final String LEFT_BORDER = BORDER + " ";
@@ -19,7 +19,7 @@ public final class Exporter extends AbstractExporter {
 
     private final int totalWidth;
 
-    public Exporter(Report report, PrintStream out) {
+    public TxtExporter(Report report, PrintStream out) {
         super(report, out);
         this.widths = calcWidths(report);
 
