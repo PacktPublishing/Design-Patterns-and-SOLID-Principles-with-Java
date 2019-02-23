@@ -8,7 +8,7 @@ Video course companion code.
 
 Changes since _Section 1_, _Video 3_.
 
-* Add `Exporter` interface and an enum inside the interface called `ExportType`.
+* Add enum `ExportType`.
 * Add `AbstractExporter` abstract class utilizing the Template Method pattern.
 * Refactor and rename the former `Exporter` to `TxtExporter` - extends the `AbstractExporter`.
 * Create new `CsvExporter` class that also extends the `AbstractExporter`.

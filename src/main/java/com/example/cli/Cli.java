@@ -1,8 +1,9 @@
 package com.example.cli;
 
 import com.example.warehouse.*;
+import com.example.warehouse.export.AbstractExporter;
 import com.example.warehouse.export.CsvExporter;
-import com.example.warehouse.export.Exporter;
+import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.TxtExporter;
 
 import java.io.FileNotFoundException;
@@ -73,7 +74,7 @@ public final class Cli implements Runnable {
     private static final List<MenuOption> EXPORT_OPTIONS = new ArrayList<>();
 
     static {
-        Exporter.ExportType[] types = Exporter.ExportType.values();
+        ExportType[] types = ExportType.values();
         IntStream.range(0, types.length)
             .mapToObj(i -> new MenuOption(i + 1, "Export to " + types[i].name()))
             .forEach(EXPORT_OPTIONS::add);
@@ -238,11 +239,11 @@ public final class Cli implements Runnable {
         if (exportMenuChoice == -1) {
             return;
         }
-        Exporter.ExportType type = Exporter.ExportType.values()[exportMenuChoice - 1];
-        Exporter exporter;
-        if (type == Exporter.ExportType.CSV) {
+        ExportType type = ExportType.values()[exportMenuChoice - 1];
+        AbstractExporter exporter;
+        if (type == ExportType.CSV) {
             exporter = new CsvExporter(report, out, true);
-        } else if (type == Exporter.ExportType.TXT) {
+        } else if (type == ExportType.TXT) {
             exporter = new TxtExporter(report, out);
         } else {
             throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", type));

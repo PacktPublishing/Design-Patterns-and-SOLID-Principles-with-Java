@@ -5,7 +5,7 @@ import com.example.warehouse.Report;
 import java.io.PrintStream;
 import java.util.List;
 
-abstract class AbstractExporter implements Exporter {
+public abstract class AbstractExporter {
 
     private final Report report;
     private final PrintStream out;
