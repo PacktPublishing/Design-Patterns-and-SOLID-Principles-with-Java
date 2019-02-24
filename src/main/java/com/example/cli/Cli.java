@@ -237,7 +237,7 @@ public final class Cli implements Runnable {
             return;
         }
         ExportType type = ExportType.values()[exportMenuChoice - 1];
-        AbstractExporter exporter;
+        Exporter exporter;
         if (type == ExportType.CSV) {
             exporter = new CsvExporter(report, out, true);
         } else if (type == ExportType.TXT) {
