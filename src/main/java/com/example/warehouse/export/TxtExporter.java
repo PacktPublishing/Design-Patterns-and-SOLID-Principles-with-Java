@@ -29,21 +29,6 @@ public final class TxtExporter extends AbstractExporter {
             + RIGHT_BORDER.length();
     }
 
-    private List<Integer> calcWidths(Report report) {
-        List<Integer> widths = new ArrayList<>();
-        report.getLabels().forEach(l -> widths.add(l.length()));
-        for (List<String> record : report.getRecords()) {
-            for (int i = 0; i < widths.size(); i++) {
-                int maxWidth = widths.get(i);
-                int width = record.get(i).length();
-                if (width > maxWidth) {
-                    widths.set(i, width);
-                }
-            }
-        }
-        return widths;
-    }
-
     @Override
     protected void beforeLabels(PrintStream out) {
         printBorder(out);
