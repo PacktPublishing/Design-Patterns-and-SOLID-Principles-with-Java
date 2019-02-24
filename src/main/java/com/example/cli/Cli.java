@@ -1,10 +1,7 @@
 package com.example.cli;
 
 import com.example.warehouse.*;
-import com.example.warehouse.export.AbstractExporter;
-import com.example.warehouse.export.CsvExporter;
-import com.example.warehouse.export.ExportType;
-import com.example.warehouse.export.TxtExporter;
+import com.example.warehouse.export.*;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -245,6 +242,8 @@ public final class Cli implements Runnable {
             exporter = new CsvExporter(report, out, true);
         } else if (type == ExportType.TXT) {
             exporter = new TxtExporter(report, out);
+        } else if (type == ExportType.HTML) {
+            exporter = new HtmlExporter(report, out);
         } else {
             throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", type));
         }

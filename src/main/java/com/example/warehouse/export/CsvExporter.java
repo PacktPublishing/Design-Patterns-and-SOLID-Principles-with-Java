@@ -25,8 +25,8 @@ public final class CsvExporter extends AbstractExporter {
     }
 
     @Override
-    protected void handleRecord(PrintStream out, List<String> records, boolean first, boolean last) {
-        printStrings(out, records);
+    protected void handleRecord(PrintStream out, List<String> record, boolean first, boolean last) {
+        printStrings(out, record);
     }
 
     private void printStrings(PrintStream out, List<String> records) {

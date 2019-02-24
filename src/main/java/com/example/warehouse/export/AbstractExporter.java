@@ -49,7 +49,7 @@ public abstract class AbstractExporter {
         }
     }
 
-    protected abstract void handleRecord(PrintStream out, List<String> records, boolean first, boolean last);
+    protected abstract void handleRecord(PrintStream out, List<String> record, boolean first, boolean last);
 
     protected void afterRecords(PrintStream out) {
     }
