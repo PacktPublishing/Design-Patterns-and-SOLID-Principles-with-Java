@@ -4,5 +4,6 @@ public enum ExportType {
 
     TXT,
     CSV,
-    HTML;
+    HTML,
+    JSON;
 }

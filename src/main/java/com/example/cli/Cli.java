@@ -244,6 +244,8 @@ public final class Cli implements Runnable {
             exporter = new TxtExporter(report, out);
         } else if (type == ExportType.HTML) {
             exporter = new HtmlExporter(report, out);
+        } else if (type == ExportType.JSON) {
+            exporter = new JsonExporter(report, out);
         } else {
             throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", type));
         }
