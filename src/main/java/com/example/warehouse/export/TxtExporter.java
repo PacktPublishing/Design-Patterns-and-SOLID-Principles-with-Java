@@ -2,6 +2,7 @@ package com.example.warehouse.export;
 
 import com.example.warehouse.Report;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public final class TxtExporter extends AbstractExporter {
 
     private final int totalWidth;
 
-    public TxtExporter(Report report, PrintStream out) {
+    public TxtExporter(Report report, OutputStream out) {
         super(report, out);
         this.widths = calcWidths(report);
 
@@ -30,46 +31,46 @@ public final class TxtExporter extends AbstractExporter {
     }
 
     @Override
-    protected void beforeLabels(PrintStream out) {
-        printBorder(out);
+    protected void beforeLabels() {
+        printBorder();
     }
 
     @Override
-    protected void handleLabels(PrintStream out, List<String> labels) {
-        printStrings(out, labels);
+    protected void handleLabels(List<String> labels) {
+        printStrings(labels);
     }
 
     @Override
-    protected void afterLabels(PrintStream out) {
-        printBorder(out);
+    protected void afterLabels() {
+        printBorder();
     }
 
     @Override
-    protected void handleRecord(PrintStream out, List<String> record, boolean first, boolean last) {
-        printStrings(out, record);
+    protected void handleRecord(List<String> record, boolean first, boolean last) {
+        printStrings(record);
     }
 
     @Override
-    protected void afterRecords(PrintStream out) {
-        printBorder(out);
+    protected void afterRecords() {
+        printBorder();
     }
 
-    private void printBorder(PrintStream out) {
+    private void printBorder() {
         for (int i = 0; i < totalWidth; i++) {
-            out.print(BORDER);
+            print(BORDER);
         }
-        out.println();
+        println();
     }
 
-    private void printStrings(PrintStream out, List<String> strings) {
-        out.print(LEFT_BORDER);
-        out.print(IntStream.range(0, strings.size())
+    private void printStrings(List<String> strings) {
+        print(LEFT_BORDER);
+        print(IntStream.range(0, strings.size())
             .mapToObj(i -> {
                 String fmt = String.format("%%%ss", widths.get(i));
                 return String.format(fmt, strings.get(i));
             })
             .collect(Collectors.joining(SEPARATOR)));
-        out.print(RIGHT_BORDER);
-        out.println();
+        print(RIGHT_BORDER);
+        println();
     }
 }
