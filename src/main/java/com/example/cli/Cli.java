@@ -210,7 +210,7 @@ public final class Cli implements Runnable {
         if (subMenuChoice == 1) {
             doOrderList();
         } else if (subMenuChoice == 2) {
-            throw new UnsupportedOperationException("Deleting orders not yet implemented.");
+            throw new UnsupportedOperationException("Adding orders not yet implemented.");
         } else if (subMenuChoice == 3) {
             throw new UnsupportedOperationException("Updating orders not yet implemented.");
         } else if (subMenuChoice == 4) {
