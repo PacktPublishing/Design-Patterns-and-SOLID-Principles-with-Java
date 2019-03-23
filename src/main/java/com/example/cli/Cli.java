@@ -182,7 +182,7 @@ public final class Cli implements Runnable {
         if (subMenuChoice == 1) {
             doProductList();
         } else if (subMenuChoice == 2) {
-            throw new UnsupportedOperationException("Adding products not yet implemented.");
+            doAddProduct();
         } else if (subMenuChoice == 3) {
             throw new UnsupportedOperationException("Updating products not yet implemented.");
         } else if (subMenuChoice == 4) {
@@ -210,7 +210,7 @@ public final class Cli implements Runnable {
         if (subMenuChoice == 1) {
             doOrderList();
         } else if (subMenuChoice == 2) {
-            throw new UnsupportedOperationException("Adding orders not yet implemented.");
+            doAddOrder();
         } else if (subMenuChoice == 3) {
             throw new UnsupportedOperationException("Updating orders not yet implemented.");
         } else if (subMenuChoice == 4) {
@@ -275,6 +275,19 @@ public final class Cli implements Runnable {
         croducts.forEach(p -> System.out.printf(fmt, p.getId(), p.getName(), p.getPrice()));
     }
 
+    private void doAddProduct() {
+        System.out.print("Enter the product's name and press RETURN: ");
+        String name = SCANNER.nextLine();
+        int price;
+        try {
+            System.out.print("Enter the product's price and press RETURN: ");
+            price = Integer.valueOf(SCANNER.nextLine());
+        } catch (InputMismatchException ex) {
+            throw new IllegalArgumentException("The product's price must be an integer.", ex);
+        }
+        warehouse.addProduct(name, price);
+    }
+
     private void doCustomerList() {
         Collection<Customer> customers = warehouse.getCustomers();
         int maxIdWidth = 0;
@@ -321,5 +334,42 @@ public final class Cli implements Runnable {
             maxIdWidth, maxCustomerNameWidth, maxCustomerIdWidth, maxTotalPriceWidth);
         orders.forEach(o -> System.out.printf(fmt, o.getId(), o.getDate(), o.getCustomer().getName(),
             o.getCustomer().getId(), o.getTotalPrice(), o.isPending() ? "pending" : "fulfilled"));
+    }
+
+    private void doAddOrder() {
+        int customerId;
+        try {
+            System.out.print("Enter the customer's ID and press RETURN: ");
+            customerId = Integer.valueOf(SCANNER.nextLine());
+        } catch (InputMismatchException ex) {
+            throw new IllegalArgumentException("The product's customerId must be an integer.", ex);
+        }
+        Map<Integer, Integer> quantities = new HashMap<>();
+        while (true) {
+            System.out.print("Enter the product's ID (or nothing to stop) and press RETURN: ");
+            String productIdLine = SCANNER.nextLine();
+            if (productIdLine.isBlank()) {
+                break;
+            }
+            System.out.print("Enter the desired quantity (or nothing to stop) and press RETURN: ");
+            String quantityLine = SCANNER.nextLine();
+            if (quantityLine.isBlank()) {
+                break;
+            }
+            int productId;
+            try {
+                productId = Integer.valueOf(productIdLine);
+            } catch (InputMismatchException ex) {
+                throw new IllegalArgumentException("The product's ID must be an integer.", ex);
+            }
+            int quantity;
+            try {
+                quantity = Integer.valueOf(quantityLine);
+            } catch (InputMismatchException ex) {
+                throw new IllegalArgumentException("The quantity must be an integer.", ex);
+            }
+            quantities.put(productId, quantity);
+        }
+        warehouse.addOrder(customerId, quantities);
     }
 }

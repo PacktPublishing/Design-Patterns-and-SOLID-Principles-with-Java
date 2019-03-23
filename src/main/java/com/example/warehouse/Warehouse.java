@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingInt;
@@ -36,15 +37,72 @@ public final class Warehouse {
     }
 
     public Collection<Product> getProducts() {
-        return products.values();
+        return products
+            .values()
+            .stream()
+            .sorted(Comparator.comparing(Product::getId))
+            .collect(Collectors.toList());
     }
 
     public Collection<Customer> getCustomers() {
-        return customers.values();
+        return customers
+            .values()
+            .stream()
+            .sorted(Comparator.comparing(Customer::getId))
+            .collect(Collectors.toList());
     }
 
     public Collection<Order> getOrders() {
-        return orders;
+        return orders
+            .stream()
+            .sorted()
+            .sorted(Comparator.comparing(Order::getId))
+            .collect(Collectors.toList());
+    }
+
+    public synchronized void addProduct(String name, int price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("The product's price cannot be negative.");
+        }
+        int max = Collections.max(products.keySet());
+        int id = max + 1;
+        Product product = new Product(id, name, price);
+        products.put(id, product);
+    }
+
+    public synchronized void addOrder(int customerId, Map<Integer, Integer> quantities) {
+        if (quantities.isEmpty()) {
+            throw new IllegalArgumentException("There has to items in the order, it cannot be empty.");
+        }
+        Customer customer = customers.get(customerId);
+        if (customer == null) {
+            throw new IllegalArgumentException("Unknown customer ID: " + customerId);
+        }
+        Map<Product, Integer> mappedQuantities = new HashMap<>();
+        for (var entry : quantities.entrySet()) {
+            Product product = products.get(entry.getKey());
+            if (product == null) {
+                throw new IllegalArgumentException("Unknown product ID: " + entry.getKey());
+            }
+            int quantity = entry.getValue();
+            if (quantity < 1) {
+                throw new IllegalArgumentException("Ordered quantity must be greater than 0.");
+            }
+            if (!inventory.containsKey(product.getId())) {
+                throw new IllegalArgumentException(String.format("Product (%s) not in stock.", product.getId()));
+            }
+            int stock = inventory.get(product.getId());
+            if (stock - quantity < 0) {
+                throw new IllegalArgumentException(
+                    String.format("Not enough product (%s) in stock. Available %s. Ordered %s.", product.getId(), stock, quantity));
+            }
+            inventory.put(product.getId(), stock - quantity);
+            mappedQuantities.put(product, quantity);
+        }
+        int max = Collections.max(products.keySet());
+        int id = max + 1;
+        Order order = new Order(id, customer, LocalDate.now(), mappedQuantities, true);
+        orders.add(order);
     }
 
     public Report generateDailyRevenueReport(Report.Type type) {
