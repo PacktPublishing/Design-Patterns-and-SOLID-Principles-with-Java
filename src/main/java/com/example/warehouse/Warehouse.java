@@ -121,7 +121,7 @@ public final class Warehouse {
         orders.add(order);
     }
 
-    public Report generateDailyRevenueReport(Report.Type type) {
+    public Report generateReport(Report.Type type) {
         if (type == Report.Type.DAILY_REVENUE) {
             return generateDailyRevenueReport();
         }
