@@ -2,11 +2,11 @@ package com.example.warehouse;
 
 public final class WarehouseException extends Exception {
 
-    WarehouseException(String message) {
+    public WarehouseException(String message) {
         super(message);
     }
 
-    WarehouseException(String message, Throwable cause) {
+    public WarehouseException(String message, Throwable cause) {
         super(message, cause);
     }
 }
