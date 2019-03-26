@@ -99,7 +99,10 @@ public final class Warehouse {
             inventory.put(product.getId(), stock - quantity);
             mappedQuantities.put(product, quantity);
         }
-        int max = Collections.max(products.keySet());
+        int max = orders.stream()
+            .mapToInt(Order::getId)
+            .max()
+            .orElseThrow();
         int id = max + 1;
         Order order = new Order(id, customer, LocalDate.now(), mappedQuantities, true);
         orders.add(order);
