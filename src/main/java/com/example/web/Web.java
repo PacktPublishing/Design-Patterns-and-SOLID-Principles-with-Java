@@ -1,6 +1,7 @@
 package com.example.web;
 
 import com.example.warehouse.Warehouse;
+import com.example.warehouse.WarehouseException;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -58,28 +59,28 @@ public class Web implements Runnable {
         return render(Map.of("title", "Index"), "templates/index.html.vm");
     }
 
-    private Object handleProducts(Request req, Response res) {
+    private Object handleProducts(Request req, Response res) throws WarehouseException {
         Map<String, Object> model = Map.of(
             "title", "Manage products",
             "products", Warehouse.getInstance().getProducts());
         return render(model, "templates/products.html.vm");
     }
 
-    private Object handleCustomers(Request req, Response res) {
+    private Object handleCustomers(Request req, Response res) throws WarehouseException {
         Map<String, Object> model = Map.of(
             "title", "Manage customers",
             "customers", Warehouse.getInstance().getCustomers());
         return render(model, "templates/customers.html.vm");
     }
 
-    private Object handleOrders(Request req, Response res) {
+    private Object handleOrders(Request req, Response res) throws WarehouseException {
         Map<String, Object> model = Map.of(
             "title", "Manage orders",
             "orders", Warehouse.getInstance().getOrders());
         return render(model, "templates/orders.html.vm");
     }
 
-    private Object handleAddProduct(Request req, Response res) {
+    private Object handleAddProduct(Request req, Response res) throws WarehouseException {
         String name = req.queryParams("name");
         int price;
         try {
@@ -96,7 +97,7 @@ public class Web implements Runnable {
         throw new UnsupportedOperationException("Adding customers not yet implemented.");
     }
 
-    private Object handleAddOrder(Request req, Response res) {
+    private Object handleAddOrder(Request req, Response res) throws WarehouseException {
         int customerId;
         try {
             customerId = Integer.valueOf(req.queryParams("customerId"));

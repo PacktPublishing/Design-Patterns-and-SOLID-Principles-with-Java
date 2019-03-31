@@ -26,21 +26,21 @@ public final class Warehouse {
     private Warehouse() {
     }
 
-    public Collection<Product> getProducts() {
+    public Collection<Product> getProducts() throws WarehouseException {
         return productDao.getProducts()
             .stream()
             .sorted(Comparator.comparing(Product::getId))
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public Collection<Customer> getCustomers() {
+    public Collection<Customer> getCustomers() throws WarehouseException {
         return customerDao.getCustomers()
             .stream()
             .sorted(Comparator.comparing(Customer::getId))
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public Collection<Order> getOrders() {
+    public Collection<Order> getOrders() throws WarehouseException {
         return orderDao.getOrders()
             .stream()
             .sorted()
@@ -48,7 +48,7 @@ public final class Warehouse {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public void addProduct(String name, int price) {
+    public void addProduct(String name, int price) throws WarehouseException {
         if (price < 0) {
             throw new IllegalArgumentException("The product's price cannot be negative.");
         }
@@ -56,7 +56,7 @@ public final class Warehouse {
         productDao.addProduct(product);
     }
 
-    public void addOrder(int customerId, Map<Integer, Integer> quantities) {
+    public void addOrder(int customerId, Map<Integer, Integer> quantities) throws WarehouseException {
         if (quantities.isEmpty()) {
             throw new IllegalArgumentException("There has to items in the order, it cannot be empty.");
         }
@@ -81,14 +81,14 @@ public final class Warehouse {
         orderDao.addOrder(order);
     }
 
-    public Report generateReport(Report.Type type) {
+    public Report generateReport(Report.Type type) throws WarehouseException {
         if (type == Report.Type.DAILY_REVENUE) {
             return generateDailyRevenueReport();
         }
         throw new UnsupportedOperationException(String.format("Report type: %s not yet implemented.", type));
     }
 
-    private Report generateDailyRevenueReport() {
+    private Report generateDailyRevenueReport() throws WarehouseException {
         Report report = new Report();
         report.addLabel("Date");
         report.addLabel("Total revenue");

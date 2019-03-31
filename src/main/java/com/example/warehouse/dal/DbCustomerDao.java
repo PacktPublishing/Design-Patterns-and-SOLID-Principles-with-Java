@@ -1,6 +1,7 @@
 package com.example.warehouse.dal;
 
 import com.example.warehouse.Customer;
+import com.example.warehouse.WarehouseException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public final class DbCustomerDao implements CustomerDao {
     }
 
     @Override
-    public Collection<Customer> getCustomers() {
+    public Collection<Customer> getCustomers() throws WarehouseException {
         try (Connection connection = DriverManager.getConnection(DEFAULT_JDBC_URL);
              Statement statement = connection.createStatement()) {
             List<Customer> customers = new ArrayList<>();
@@ -37,12 +38,12 @@ public final class DbCustomerDao implements CustomerDao {
             }
             return customers;
         } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
+            throw new WarehouseException("Trouble while fetching customers.", ex);
         }
     }
 
     @Override
-    public Customer getCustomer(int id) {
+    public Customer getCustomer(int id) throws WarehouseException {
         try (Connection connection = DriverManager.getConnection(DEFAULT_JDBC_URL);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM customers WHERE id = ?")) {
             List<Customer> customers = new ArrayList<>();
@@ -54,7 +55,7 @@ public final class DbCustomerDao implements CustomerDao {
                 return null;
             }
         } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
+            throw new WarehouseException(String.format("Trouble while fetching customer (%s).", id), ex);
         }
     }
 

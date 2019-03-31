@@ -101,7 +101,7 @@ public final class Cli implements Runnable {
                         doMenuAction(mainMenuChoice, subMenuChoice);
                     } catch (NumberFormatException ex) {
                         System.err.println("Invalid input. Enter a number.");
-                    } catch (IllegalArgumentException | UnsupportedOperationException ex) {
+                    } catch (WarehouseException | IllegalArgumentException | UnsupportedOperationException ex) {
                         System.err.println(ex.getMessage());
                     }
                 }
@@ -151,7 +151,7 @@ public final class Cli implements Runnable {
         return choice;
     }
 
-    private void doMenuAction(int mainMenuChoice, int subMenuChoice) {
+    private void doMenuAction(int mainMenuChoice, int subMenuChoice) throws WarehouseException {
         if (mainMenuChoice == 1) {
             doProductAction(subMenuChoice);
         } else if (mainMenuChoice == 2) {
@@ -165,7 +165,7 @@ public final class Cli implements Runnable {
         }
     }
 
-    private void doProductAction(int subMenuChoice) {
+    private void doProductAction(int subMenuChoice) throws WarehouseException {
         if (subMenuChoice == 1) {
             doProductList();
         } else if (subMenuChoice == 2) {
@@ -179,7 +179,7 @@ public final class Cli implements Runnable {
         }
     }
 
-    private void doCustomerAction(int subMenuChoice) {
+    private void doCustomerAction(int subMenuChoice) throws WarehouseException {
         if (subMenuChoice == 1) {
             doCustomerList();
         } else if (subMenuChoice == 2) {
@@ -193,7 +193,7 @@ public final class Cli implements Runnable {
         }
     }
 
-    private void doOrderAction(int subMenuChoice) {
+    private void doOrderAction(int subMenuChoice) throws WarehouseException {
         if (subMenuChoice == 1) {
             doOrderList();
         } else if (subMenuChoice == 2) {
@@ -207,7 +207,7 @@ public final class Cli implements Runnable {
         }
     }
 
-    private void doReportAction(int subMenuChoice) {
+    private void doReportAction(int subMenuChoice) throws WarehouseException {
         Report report;
         if (subMenuChoice == 1) {
             report = Warehouse.getInstance().generateReport(Report.Type.DAILY_REVENUE);
@@ -239,7 +239,7 @@ public final class Cli implements Runnable {
         exporter.export();
     }
 
-    private void doProductList() {
+    private void doProductList() throws WarehouseException {
         Collection<Product> croducts = Warehouse.getInstance().getProducts();
         int maxIdWidth = 0;
         int maxNameWidth = 0;
@@ -262,7 +262,7 @@ public final class Cli implements Runnable {
         croducts.forEach(p -> System.out.printf(fmt, p.getId(), p.getName(), p.getPrice()));
     }
 
-    private void doAddProduct() {
+    private void doAddProduct() throws WarehouseException {
         System.out.print("Enter the product's name and press RETURN: ");
         String name = SCANNER.nextLine();
         int price;
@@ -275,7 +275,7 @@ public final class Cli implements Runnable {
         Warehouse.getInstance().addProduct(name, price);
     }
 
-    private void doCustomerList() {
+    private void doCustomerList() throws WarehouseException {
         Collection<Customer> customers = Warehouse.getInstance().getCustomers();
         int maxIdWidth = 0;
         int maxNameWidth = 0;
@@ -293,7 +293,7 @@ public final class Cli implements Runnable {
         customers.forEach(c -> System.out.printf(fmt, c.getId(), c.getName()));
     }
 
-    private void doOrderList() {
+    private void doOrderList() throws WarehouseException {
         Collection<Order> orders = Warehouse.getInstance().getOrders();
         int maxIdWidth = 0;
         int maxCustomerNameWidth = 0;
@@ -323,7 +323,7 @@ public final class Cli implements Runnable {
             o.getCustomer().getId(), o.getTotalPrice(), o.isPending() ? "pending" : "fulfilled"));
     }
 
-    private void doAddOrder() {
+    private void doAddOrder() throws WarehouseException {
         int customerId;
         try {
             System.out.print("Enter the customer's ID and press RETURN: ");
