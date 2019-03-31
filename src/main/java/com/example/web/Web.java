@@ -28,9 +28,11 @@ public class Web implements Runnable {
     }
 
     private final List<String> args;
+    private final Warehouse warehouse;
 
-    public Web(List<String> args) {
+    public Web(List<String> args, Warehouse warehouse) {
         this.args = args;
+        this.warehouse = warehouse;
     }
 
     public void run() {
@@ -62,21 +64,21 @@ public class Web implements Runnable {
     private Object handleProducts(Request req, Response res) throws WarehouseException {
         Map<String, Object> model = Map.of(
             "title", "Manage products",
-            "products", Warehouse.getInstance().getProducts());
+            "products", warehouse.getProducts());
         return render(model, "templates/products.html.vm");
     }
 
     private Object handleCustomers(Request req, Response res) throws WarehouseException {
         Map<String, Object> model = Map.of(
             "title", "Manage customers",
-            "customers", Warehouse.getInstance().getCustomers());
+            "customers", warehouse.getCustomers());
         return render(model, "templates/customers.html.vm");
     }
 
     private Object handleOrders(Request req, Response res) throws WarehouseException {
         Map<String, Object> model = Map.of(
             "title", "Manage orders",
-            "orders", Warehouse.getInstance().getOrders());
+            "orders", warehouse.getOrders());
         return render(model, "templates/orders.html.vm");
     }
 
@@ -88,7 +90,7 @@ public class Web implements Runnable {
         } catch (NumberFormatException ex) {
             throw new IllegalArgumentException("The product's price must be an integer.", ex);
         }
-        Warehouse.getInstance().addProduct(name, price);
+        warehouse.addProduct(name, price);
         res.redirect("/products");
         return null;
     }
@@ -104,7 +106,7 @@ public class Web implements Runnable {
         } catch (NumberFormatException ex) {
             throw new IllegalArgumentException("The customer's ID must be an integer.", ex);
         }
-        Warehouse.getInstance().addOrder(customerId, getQuantities(req));
+        warehouse.addOrder(customerId, getQuantities(req));
         res.redirect("/orders");
         return null;
     }

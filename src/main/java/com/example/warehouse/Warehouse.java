@@ -1,6 +1,9 @@
 package com.example.warehouse;
 
-import com.example.warehouse.dal.*;
+import com.example.warehouse.dal.CustomerDao;
+import com.example.warehouse.dal.InventoryDao;
+import com.example.warehouse.dal.OrderDao;
+import com.example.warehouse.dal.ProductDao;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,20 +13,20 @@ import static java.util.stream.Collectors.summingInt;
 
 public final class Warehouse {
 
-    private static class WarehouseHolder {
-        private static final Warehouse INSTANCE = new Warehouse();
-    }
+    private final ProductDao productDao;
+    private final CustomerDao customerDao;
+    private final InventoryDao inventoryDao;
+    private final OrderDao orderDao;
 
-    public static Warehouse getInstance() {
-        return WarehouseHolder.INSTANCE;
-    }
-
-    private final ProductDao productDao = new MemoryProductDao();
-    private final CustomerDao customerDao = new DbCustomerDao();
-    private final InventoryDao inventoryDao = new MemoryInventoryDao(productDao);
-    private final OrderDao orderDao = new MemoryOrderDao(productDao, customerDao);
-
-    private Warehouse() {
+    public Warehouse(
+        ProductDao productDao,
+        CustomerDao customerDao,
+        InventoryDao inventoryDao,
+        OrderDao orderDao) {
+        this.productDao = productDao;
+        this.customerDao = customerDao;
+        this.inventoryDao = inventoryDao;
+        this.orderDao = orderDao;
     }
 
     public Collection<Product> getProducts() throws WarehouseException {
