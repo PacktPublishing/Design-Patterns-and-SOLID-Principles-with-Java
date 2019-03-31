@@ -14,19 +14,11 @@ import java.util.stream.Collectors;
 
 public final class MemoryCustomerDao implements CustomerDao {
 
-    private static class CustomerDaoHolder {
-        private static final CustomerDao INSTANCE = new MemoryCustomerDao();
-    }
-
     private static final String DEFAULT_CUSTOMERS_CSV_FILE = "customers.csv";
-
-    public static CustomerDao getInstance() {
-        return CustomerDaoHolder.INSTANCE;
-    }
 
     private final Map<Integer, Customer> customers;
 
-    private MemoryCustomerDao() {
+    public MemoryCustomerDao() {
         this.customers = new HashMap<>();
         try {
             readCustomers();

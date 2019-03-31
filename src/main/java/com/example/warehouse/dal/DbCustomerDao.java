@@ -10,18 +10,10 @@ import java.util.List;
 
 public final class DbCustomerDao implements CustomerDao {
 
-    private static class CustomerDaoHolder {
-        private static final CustomerDao INSTANCE = new DbCustomerDao();
-    }
-
     // INFO: on first connection the in-memory DB will be initialized by init.sql located on the classpath.
     private static final String DEFAULT_JDBC_URL = "jdbc:h2:mem:warehouse;INIT=RUNSCRIPT FROM 'classpath:scripts/init.sql'";
 
-    public static CustomerDao getInstance() {
-        return CustomerDaoHolder.INSTANCE;
-    }
-
-    private DbCustomerDao() {
+    public DbCustomerDao() {
     }
 
     @Override

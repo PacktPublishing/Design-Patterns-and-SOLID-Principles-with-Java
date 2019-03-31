@@ -11,19 +11,11 @@ import java.util.stream.Collectors;
 
 public final class MemoryProductDao implements ProductDao {
 
-    private static class ProductDaoHolder {
-        private static final ProductDao INSTANCE = new MemoryProductDao();
-    }
-
     private static final String DEFAULT_PRODUCTS_CSV_FILE = "products.csv";
-
-    public static ProductDao getInstance() {
-        return ProductDaoHolder.INSTANCE;
-    }
 
     private final Map<Integer, Product> products;
 
-    private MemoryProductDao() {
+    public MemoryProductDao() {
         this.products = new HashMap<>();
         try {
             readProducts();

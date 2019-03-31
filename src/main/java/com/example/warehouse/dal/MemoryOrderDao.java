@@ -15,19 +15,16 @@ import java.util.stream.Collectors;
 
 public final class MemoryOrderDao implements OrderDao {
 
-    private static class OrderDaoHolder {
-        private static final OrderDao INSTANCE = new MemoryOrderDao();
-    }
-
     private static final String DEFAULT_ORDERS_CSV_FILE = "orders.csv";
 
-    public static OrderDao getInstance() {
-        return OrderDaoHolder.INSTANCE;
-    }
+    private final ProductDao productDao;
+    private final CustomerDao customerDao;
 
     private final List<Order> orders;
 
-    private MemoryOrderDao() {
+    public MemoryOrderDao(ProductDao productDao, CustomerDao customerDao) {
+        this.productDao = productDao;
+        this.customerDao = customerDao;
         this.orders = new ArrayList<>();
         try {
             readOrders();
@@ -77,7 +74,7 @@ public final class MemoryOrderDao implements OrderDao {
             } catch (NumberFormatException ex) {
                 throw new WarehouseException("Failed to read orders: invalid customer ID in CSV, must be an integer.", ex);
             }
-            Customer customer = MemoryCustomerDao.getInstance().getCustomer(customerId);
+            Customer customer = customerDao.getCustomer(customerId);
             if (customer == null) {
                 throw new WarehouseException("Failed to read orders: unknown customer ID in CSV.");
             }
@@ -97,7 +94,7 @@ public final class MemoryOrderDao implements OrderDao {
                 } catch (NumberFormatException ex) {
                     throw new WarehouseException("Failed to read orders: invalid product ID in CSV, must be an integer.", ex);
                 }
-                Product product = MemoryProductDao.getInstance().getProduct(productId);
+                Product product = productDao.getProduct(productId);
                 if (product == null) {
                     throw new WarehouseException("Failed to read orders: unknown product ID in CSV.");
                 }

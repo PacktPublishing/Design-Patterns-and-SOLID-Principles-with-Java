@@ -18,10 +18,10 @@ public final class Warehouse {
         return WarehouseHolder.INSTANCE;
     }
 
-    private final ProductDao productDao = MemoryProductDao.getInstance();
-    private final CustomerDao customerDao = DbCustomerDao.getInstance();
-    private final InventoryDao inventoryDao = MemoryInventoryDao.getInstance();
-    private final OrderDao orderDao = MemoryOrderDao.getInstance();
+    private final ProductDao productDao = new MemoryProductDao();
+    private final CustomerDao customerDao = new DbCustomerDao();
+    private final InventoryDao inventoryDao = new MemoryInventoryDao(productDao);
+    private final OrderDao orderDao = new MemoryOrderDao(productDao, customerDao);
 
     private Warehouse() {
     }
