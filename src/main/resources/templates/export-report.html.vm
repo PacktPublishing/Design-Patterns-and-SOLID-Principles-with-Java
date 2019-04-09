@@ -1,5 +1,0 @@
-#parse("templates/header.html.vm")
-<pre>
-$export
-</pre>
-#parse("templates/footer.html.vm")
