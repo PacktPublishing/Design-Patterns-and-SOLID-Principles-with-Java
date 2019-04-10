@@ -6,4 +6,6 @@ Video course companion code.
 
 ## Section 3, Video 1
 
-Nothing has changed since Section 2, Video 5.
+Changes since Section 2, Video 5
+
+* Implemented report export functionality in the `Web` class.

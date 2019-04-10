@@ -4,6 +4,7 @@
     <li><a href="products">Products</a></li>
     <li><a href="customers">Customers</a></li>
     <li><a href="orders">Orders</a></li>
+    <li><a href="reports">Reports</a></li>
 </ul>
 </body>
 </html>

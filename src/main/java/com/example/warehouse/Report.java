@@ -8,7 +8,17 @@ import static java.util.stream.Collectors.toList;
 public final class Report {
 
     public enum Type {
-        DAILY_REVENUE
+        DAILY_REVENUE("Daily revenue report");
+
+        private final String displayName;
+
+        Type(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
     private List<String> labels;
