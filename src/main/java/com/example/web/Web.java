@@ -114,6 +114,9 @@ public class Web implements Runnable {
         } else if (exportType == ExportType.TXT) {
             exporter = new TxtExporter(report, ps);
         } else if (exportType == ExportType.HTML) {
+            // TODO: when the output of the HTML exporter is shown between
+            // <pre> tags in a browser the tags themselves aren't visible.
+            // Maybe escape < and > signs using &lt; and &gt; HTML entities.
             exporter = new HtmlExporter(report, ps);
         } else if (exportType == ExportType.JSON) {
             exporter = new JsonExporter(report, ps);
