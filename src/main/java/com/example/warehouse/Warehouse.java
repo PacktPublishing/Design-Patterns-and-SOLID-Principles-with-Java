@@ -6,10 +6,8 @@ import com.example.warehouse.dal.OrderDao;
 import com.example.warehouse.dal.ProductDao;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingInt;
+import static java.util.stream.Collectors.*;
 
 public final class Warehouse {
 
@@ -33,14 +31,14 @@ public final class Warehouse {
         return productDao.getProducts()
             .stream()
             .sorted(Comparator.comparing(Product::getId))
-            .collect(Collectors.toUnmodifiableList());
+            .collect(toUnmodifiableList());
     }
 
     public Collection<Customer> getCustomers() throws WarehouseException {
         return customerDao.getCustomers()
             .stream()
             .sorted(Comparator.comparing(Customer::getId))
-            .collect(Collectors.toUnmodifiableList());
+            .collect(toUnmodifiableList());
     }
 
     public Collection<Order> getOrders() throws WarehouseException {
@@ -48,7 +46,7 @@ public final class Warehouse {
             .stream()
             .sorted()
             .sorted(Comparator.comparing(Order::getId))
-            .collect(Collectors.toUnmodifiableList());
+            .collect(toUnmodifiableList());
     }
 
     public void addProduct(String name, int price) throws WarehouseException {
@@ -86,7 +84,7 @@ public final class Warehouse {
 
     public Report generateReport(Report.Type type) throws WarehouseException {
         if (type == Report.Type.DAILY_REVENUE) {
-            return generateDailyRevenueReport();
+            return generateDailyRevenueReport2();
         }
         throw new UnsupportedOperationException(String.format("Report type: %s not yet implemented.", type));
     }
@@ -101,6 +99,33 @@ public final class Warehouse {
             .sorted()
             .collect(groupingBy(Order::getDate, LinkedHashMap::new, summingInt(Order::getTotalPrice)))
             .forEach((date, totalRevenue) -> report.addRecord(Arrays.asList(date, totalRevenue)));
+        return report;
+    }
+
+    private Report generateDailyRevenueReport2() throws WarehouseException {
+        Report report = new Report();
+        report.addLabel("Date");
+        report.addLabel("Total products");
+        report.addLabel("Total revenue");
+        orderDao.getOrders()
+            .stream()
+            .sorted()
+            .collect(groupingBy(Order::getDate, LinkedHashMap::new, toList()))
+            .forEach((date, orders) -> report.addRecord(Arrays.asList(
+                date,
+                orders
+                    .stream()
+                    .sorted()
+                    .map(Order::getQuantities)
+                    .map(Map::values)
+                    .flatMap(Collection::stream)
+                    .mapToInt(Integer::intValue)
+                    .sum(),
+                orders
+                    .stream()
+                    .sorted()
+                    .mapToInt(Order::getTotalPrice)
+                    .sum())));
         return report;
     }
 }
