@@ -2,29 +2,29 @@ package com.example.warehouse.export;
 
 import com.example.warehouse.Report;
 
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractExporter extends PrintStream implements Exporter {
+public abstract class AbstractExporter implements Exporter {
 
     private final Report report;
+    private final PrintStream out;
 
-    AbstractExporter(Report report, OutputStream out) {
-        super(out);
+    AbstractExporter(Report report, PrintStream out) {
         this.report = report;
+        this.out = out;
     }
 
     @Override
     public final void export() {
-        beforeLabels();
-        handleLabels(report.getLabels());
-        afterLabels();
+        beforeLabels(out);
+        handleLabels(out, report.getLabels());
+        afterLabels(out);
 
-        beforeRecords();
+        beforeRecords(out);
         handleRecords();
-        afterRecords();
+        afterRecords(out);
     }
 
     protected List<Integer> calcWidths(Report report) {
@@ -42,32 +42,32 @@ public abstract class AbstractExporter extends PrintStream implements Exporter {
         return widths;
     }
 
-    protected void beforeLabels() {
+    protected void beforeLabels(PrintStream out) {
     }
 
-    protected abstract void handleLabels(List<String> labels);
+    protected abstract void handleLabels(PrintStream out, List<String> labels);
 
-    protected void afterLabels() {
+    protected void afterLabels(PrintStream out) {
     }
 
-    protected void beforeRecords() {
+    protected void beforeRecords(PrintStream out) {
     }
 
     private void handleRecords() {
         List<List<String>> records = report.getRecords();
         if (records.size() == 1) {
-            handleRecord(records.get(0), true, true);
+            handleRecord(out, records.get(0), true, true);
         } else if (records.size() >= 2) {
-            handleRecord(records.get(0), true, false);
+            handleRecord(out, records.get(0), true, false);
             for (List<String> record : records.subList(1, records.size() - 1)) {
-                handleRecord(record, false, false);
+                handleRecord(out, record, false, false);
             }
-            handleRecord(records.get(records.size() - 1), false, true);
+            handleRecord(out, records.get(records.size() - 1), false, true);
         }
     }
 
-    protected abstract void handleRecord(List<String> record, boolean first, boolean last);
+    protected abstract void handleRecord(PrintStream out, List<String> record, boolean first, boolean last);
 
-    protected void afterRecords() {
+    protected void afterRecords(PrintStream out) {
     }
 }
