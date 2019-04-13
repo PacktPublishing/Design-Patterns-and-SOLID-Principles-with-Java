@@ -163,7 +163,7 @@ public final class Cli implements Runnable {
         } else if (mainMenuChoice == 4) {
             doReportAction(subMenuChoice);
         } else {
-            throw new IllegalStateException("There are only 3 main menu options, this cannot happen.");
+            throw new IllegalStateException("There are no such menu option, this cannot happen.");
         }
     }
 
@@ -177,7 +177,7 @@ public final class Cli implements Runnable {
         } else if (subMenuChoice == 4) {
             throw new UnsupportedOperationException("Deleting products not yet implemented.");
         } else {
-            throw new IllegalStateException("There are only 4 product menu options, this cannot happen.");
+            throw new IllegalStateException("There are no such menu options, this cannot happen.");
         }
     }
 
@@ -191,7 +191,7 @@ public final class Cli implements Runnable {
         } else if (subMenuChoice == 4) {
             throw new UnsupportedOperationException("Deleting customers not yet implemented.");
         } else {
-            throw new IllegalStateException("There are only 4 customer menu options, this cannot happen.");
+            throw new IllegalStateException("There are no such menu options, this cannot happen.");
         }
     }
 
@@ -205,7 +205,7 @@ public final class Cli implements Runnable {
         } else if (subMenuChoice == 4) {
             throw new UnsupportedOperationException("Deleting orders not yet implemented.");
         } else {
-            throw new IllegalStateException("There are only 4 order menu options, this cannot happen.");
+            throw new IllegalStateException("There are no such menu option, this cannot happen.");
         }
     }
 
@@ -214,7 +214,7 @@ public final class Cli implements Runnable {
         if (subMenuChoice == 1) {
             report = warehouse.generateReport(Report.Type.DAILY_REVENUE);
         } else {
-            throw new IllegalStateException("There are only 2 report menu options, this cannot happen.");
+            throw new IllegalStateException("There are no such menu option, this cannot happen.");
         }
         doReportExport(report, System.out);
     }
