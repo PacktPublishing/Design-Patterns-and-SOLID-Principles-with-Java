@@ -107,17 +107,16 @@ public class Web implements Runnable {
             throw new IllegalArgumentException("Report and export type must be specified.", ex);
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
         Report report = warehouse.generateReport(reportType);
         Exporter exporter;
         if (exportType == ExportType.CSV) {
-            exporter = new CsvExporter(report, ps, true);
+            exporter = new CsvExporter(report, new PrintStream(baos), true);
         } else if (exportType == ExportType.TXT) {
-            exporter = new TxtExporter(report, ps);
+            exporter = new TxtExporter(report, new PrintStream(baos));
         } else if (exportType == ExportType.HTML) {
-            exporter = new HtmlExporter(report, new HtmlEscaperOutputStream(ps));
+            exporter = new HtmlExporter(report, new PrintStream(new HtmlEscaperOutputStream(baos)));
         } else if (exportType == ExportType.JSON) {
-            exporter = new JsonExporter(report, ps);
+            exporter = new JsonExporter(report, new PrintStream(baos));
         } else {
             throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", reportType));
         }
