@@ -1,6 +1,9 @@
 package com.example;
 
 import com.example.cli.Cli;
+import com.example.warehouse.AlternativeReportGeneration;
+import com.example.warehouse.DefaultReportGeneration;
+import com.example.warehouse.ReportGeneration;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.dal.*;
 import com.example.web.Web;
@@ -9,19 +12,27 @@ import java.util.List;
 
 public class Main {
 
-    public static int CLIENT_ID;
-
     public static void main(String[] args) {
         List<String> arguments = List.of(args);
 
         checkClientId(arguments);
-        parseClientId(arguments.get(0));
+        int clientId = parseClientId(arguments.get(0));
 
         ProductDao productDao = new MemoryProductDao();
         CustomerDao customerDao = new DbCustomerDao();
         InventoryDao inventoryDao = new MemoryInventoryDao(productDao);
         OrderDao orderDao = new MemoryOrderDao(productDao, customerDao);
-        Warehouse warehouse = new Warehouse(productDao, customerDao, inventoryDao, orderDao);
+
+        ReportGeneration reportGeneration;
+        if (clientId == 1) {
+            reportGeneration = new DefaultReportGeneration(orderDao);
+        } else if (clientId == 2) {
+            reportGeneration = new AlternativeReportGeneration(orderDao);
+        } else {
+            throw new IllegalStateException("Unknown client ID: " + clientId);
+        }
+
+        Warehouse warehouse = new Warehouse(productDao, customerDao, inventoryDao, orderDao, reportGeneration);
 
         new Web(arguments, warehouse).run();
         new Cli(arguments, warehouse).run();
@@ -37,12 +48,14 @@ public class Main {
         }
     }
 
-    private static void parseClientId(String str) {
+    private static int parseClientId(String str) {
         try {
-            CLIENT_ID = Integer.valueOf(str);
+            return Integer.valueOf(str);
         } catch (NumberFormatException ex) {
             System.err.println(String.format("Illegal client ID: %s. It must be an integer", str));
             System.exit(1);
+            // INFO: never returns 0 because of the exit class.
+            return 0;
         }
     }
 }
