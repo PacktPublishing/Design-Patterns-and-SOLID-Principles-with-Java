@@ -1,5 +1,6 @@
 package com.example.warehouse;
 
+import com.example.Main;
 import com.example.warehouse.dal.CustomerDao;
 import com.example.warehouse.dal.InventoryDao;
 import com.example.warehouse.dal.OrderDao;
@@ -84,7 +85,13 @@ public final class Warehouse {
 
     public Report generateReport(Report.Type type) throws WarehouseException {
         if (type == Report.Type.DAILY_REVENUE) {
-            return generateDailyRevenueReport2();
+            if (Main.CLIENT_ID == 1) {
+                return generateDailyRevenueReport();
+            } else if (Main.CLIENT_ID == 2) {
+                return generateDailyRevenueReport2();
+            } else {
+                throw new IllegalStateException("Unknown client ID: " + Main.CLIENT_ID);
+            }
         }
         throw new UnsupportedOperationException(String.format("Report type: %s not yet implemented.", type));
     }
