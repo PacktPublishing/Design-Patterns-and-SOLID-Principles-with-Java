@@ -1,6 +1,7 @@
 package com.example.web;
 
 import com.example.warehouse.Report;
+import com.example.warehouse.ReportDelivery;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
 import com.example.warehouse.export.*;
@@ -121,6 +122,9 @@ public class Web implements Runnable {
             throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", reportType));
         }
         exporter.export();
+
+        ReportDelivery reportDelivery = null; // TODO: "decide" how, when and which implementation to instantiate.
+        reportDelivery.deliver();
 
         Map<String, Object> model = Map.of(
             "title", String.format("%s %s export", reportType.getDisplayName(), exportType),

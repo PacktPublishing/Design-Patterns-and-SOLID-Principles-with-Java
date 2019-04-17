@@ -217,6 +217,8 @@ public final class Cli implements Runnable {
             throw new IllegalStateException("There are no such menu option, this cannot happen.");
         }
         doReportExport(report, System.out);
+        ReportDelivery reportDelivery = null; // TODO: "decide" how, when and which implementation to instantiate.
+        reportDelivery.deliver();
     }
 
     private void doReportExport(Report report, PrintStream out) {
