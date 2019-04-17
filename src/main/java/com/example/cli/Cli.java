@@ -1,5 +1,6 @@
 package com.example.cli;
 
+import com.example.AbstractApp;
 import com.example.warehouse.*;
 import com.example.warehouse.export.*;
 
@@ -7,7 +8,7 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public final class Cli implements Runnable {
+public final class Cli extends AbstractApp implements Runnable {
 
     static final class MenuOption {
 
@@ -217,6 +218,7 @@ public final class Cli implements Runnable {
             throw new IllegalStateException("There are no such menu option, this cannot happen.");
         }
         doReportExport(report, System.out);
+        deliver();
     }
 
     private void doReportExport(Report report, PrintStream out) {
