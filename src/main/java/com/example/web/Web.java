@@ -35,10 +35,12 @@ public class Web implements Runnable {
 
     private final List<String> args;
     private final Warehouse warehouse;
+    private final ReportDelivery reportDelivery;
 
-    public Web(List<String> args, Warehouse warehouse) {
+    public Web(List<String> args, Warehouse warehouse, ReportDelivery reportDelivery) {
         this.args = args;
         this.warehouse = warehouse;
+        this.reportDelivery = reportDelivery;
     }
 
     public void run() {
@@ -123,7 +125,6 @@ public class Web implements Runnable {
         }
         exporter.export();
 
-        ReportDelivery reportDelivery = null; // TODO: "decide" how, when and which implementation to instantiate.
         reportDelivery.deliver();
 
         Map<String, Object> model = Map.of(

@@ -79,10 +79,14 @@ public final class Cli implements Runnable {
 
     private final List<String> args;
     private final Warehouse warehouse;
+    private final ReportDelivery reportDelivery;
 
-    public Cli(List<String> args, Warehouse warehouse) {
+    private boolean deliverReports = true;
+
+    public Cli(List<String> args, Warehouse warehouse, ReportDelivery reportDelivery) {
         this.args = args;
         this.warehouse = warehouse;
+        this.reportDelivery = reportDelivery;
     }
 
     public void run() {
@@ -217,7 +221,6 @@ public final class Cli implements Runnable {
             throw new IllegalStateException("There are no such menu option, this cannot happen.");
         }
         doReportExport(report, System.out);
-        ReportDelivery reportDelivery = null; // TODO: "decide" how, when and which implementation to instantiate.
         reportDelivery.deliver();
     }
 
