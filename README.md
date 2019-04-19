@@ -6,7 +6,7 @@ Video course companion code.
 
 ## Section 3, Video 2
 
-Changes since Section 3, Video 1
+Changes since _Section 3_, _Video 1_.
 
 * Created `ReportGeneration` interface as an example strategy.
 * Refactor `Warehouse` class to depend on the `ReportGeneration` interface instead of directly containing code related to report generation.
