@@ -2,6 +2,7 @@ package com.example.cli;
 
 import com.example.warehouse.*;
 import com.example.warehouse.export.*;
+import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 
 import java.io.PrintStream;
 import java.util.*;
@@ -212,23 +213,28 @@ public final class Cli implements Runnable {
     }
 
     private void doReportAction(int subMenuChoice) throws WarehouseException {
-        Report report;
+        Report.Type reportType;
         if (subMenuChoice == 1) {
-            report = warehouse.generateReport(Report.Type.DAILY_REVENUE);
+            reportType = Report.Type.DAILY_REVENUE;
         } else {
             throw new IllegalStateException("There are no such menu option, this cannot happen.");
         }
-        doReportExport(report, System.out);
-        reportDelivery.deliver();
-    }
+        Report report = warehouse.generateReport(reportType);
 
-    private void doReportExport(Report report, PrintStream out) {
+        ExportType exportType;
         displayMenu(EXPORT_OPTIONS);
         int exportMenuChoice = chooseMenuOption(EXPORT_OPTIONS);
         if (exportMenuChoice == -1) {
             return;
         }
-        ExportType type = ExportType.values()[exportMenuChoice - 1];
+        exportType = ExportType.values()[exportMenuChoice - 1];
+
+        CopyByteArrayOutputStream cos = new CopyByteArrayOutputStream(System.out);
+        doReportExport(report, exportType, new PrintStream(cos));
+        reportDelivery.deliver(reportType, exportType, cos.toByteArray());
+    }
+
+    private void doReportExport(Report report, ExportType type, PrintStream out) {
         Exporter exporter;
         if (type == ExportType.CSV) {
             exporter = new CsvExporter(report, out, true);

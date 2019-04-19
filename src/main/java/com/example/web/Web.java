@@ -125,7 +125,7 @@ public class Web implements Runnable {
         }
         exporter.export();
 
-        reportDelivery.deliver();
+        reportDelivery.deliver(reportType, exportType, baos.toByteArray());
 
         Map<String, Object> model = Map.of(
             "title", String.format("%s %s export", reportType.getDisplayName(), exportType),
