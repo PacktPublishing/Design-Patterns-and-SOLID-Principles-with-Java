@@ -81,8 +81,6 @@ public final class Cli implements Runnable {
     private final Warehouse warehouse;
     private final ReportDelivery reportDelivery;
 
-    private boolean deliverReports = true;
-
     public Cli(List<String> args, Warehouse warehouse, ReportDelivery reportDelivery) {
         this.args = args;
         this.warehouse = warehouse;
