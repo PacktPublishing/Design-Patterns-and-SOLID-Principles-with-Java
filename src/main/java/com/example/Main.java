@@ -5,6 +5,7 @@ import com.example.warehouse.*;
 import com.example.warehouse.dal.*;
 import com.example.web.Web;
 
+import javax.mail.internet.AddressException;
 import java.util.List;
 
 public class Main {
@@ -31,7 +32,14 @@ public class Main {
 
         Warehouse warehouse = new Warehouse(productDao, customerDao, inventoryDao, orderDao, reportGeneration);
 
-        ReportDelivery reportDelivery = null; // TODO: "decide" how, when and which implementation to instantiate.
+        ReportDelivery reportDelivery;
+        try {
+            reportDelivery = new EmailReportDelivery("destination@demo.com");
+        } catch (AddressException ex) {
+            System.err.println("Wrong email address:" + ex.getMessage());
+            System.exit(1);
+            return;
+        }
 
         new Web(arguments, warehouse, reportDelivery).run();
         new Cli(arguments, warehouse, reportDelivery).run();
