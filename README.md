@@ -6,7 +6,7 @@ Video course companion code.
 
 ## Section 2, Video 1
 
-Changes since Section 1, Video 5.
+Changes since _Section 1_, _Video 5_.
 
 Add a new web interface, implement add product/order functions.
 After starting the application the web interface is available at [`http://localhost:8080`](http://localhost:8080).
