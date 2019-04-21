@@ -1,6 +1,6 @@
 package com.example.warehouse;
 
-public final class WarehouseException extends Exception {
+public class WarehouseException extends Exception {
 
     public WarehouseException(String message) {
         super(message);

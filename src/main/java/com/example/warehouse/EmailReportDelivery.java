@@ -23,7 +23,7 @@ public class EmailReportDelivery implements ReportDelivery {
     }
 
     @Override
-    public void deliver(Report.Type reportType, ExportType exportType, byte[] bytes) {
+    public void deliver(Report.Type reportType, ExportType exportType, byte[] bytes) throws ReportDeliveryException {
         try {
             MimeBodyPart msgBodyPart = new MimeBodyPart();
             msgBodyPart.setContent(String.format("Please the attached %s report.", exportType), "text/plain");
@@ -46,7 +46,7 @@ public class EmailReportDelivery implements ReportDelivery {
 
             Transport.send(message);
         } catch (MessagingException ex) {
-            throw new IllegalStateException("Problem while delivering report export.", ex);
+            throw new ReportDeliveryException("Problem while delivering report export.", ex);
         }
     }
 }

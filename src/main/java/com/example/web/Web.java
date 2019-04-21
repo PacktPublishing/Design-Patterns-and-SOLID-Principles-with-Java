@@ -1,9 +1,6 @@
 package com.example.web;
 
-import com.example.warehouse.Report;
-import com.example.warehouse.ReportDelivery;
-import com.example.warehouse.Warehouse;
-import com.example.warehouse.WarehouseException;
+import com.example.warehouse.*;
 import com.example.warehouse.export.*;
 import com.example.web.util.HtmlEscaperOutputStream;
 import spark.ModelAndView;
@@ -125,7 +122,11 @@ public class Web implements Runnable {
         }
         exporter.export();
 
-        reportDelivery.deliver(reportType, exportType, baos.toByteArray());
+        try {
+            reportDelivery.deliver(reportType, exportType, baos.toByteArray());
+        } catch (ReportDeliveryException ex) {
+            System.err.println(ex.getMessage());
+        }
 
         Map<String, Object> model = Map.of(
             "title", String.format("%s %s export", reportType.getDisplayName(), exportType),
