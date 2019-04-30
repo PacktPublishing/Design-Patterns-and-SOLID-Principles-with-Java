@@ -33,12 +33,16 @@ public class Main {
         Warehouse warehouse = new Warehouse(productDao, customerDao, inventoryDao, orderDao, reportGeneration);
 
         ReportDelivery reportDelivery;
-        try {
-            reportDelivery = new EmailReportDelivery("destination@demo.com");
-        } catch (AddressException ex) {
-            System.err.println("Wrong email address:" + ex.getMessage());
-            System.exit(1);
-            return;
+        if (clientId == 1) {
+            try {
+                reportDelivery = new EmailReportDelivery("destination@demo.com");
+            } catch (AddressException ex) {
+                System.err.println("Wrong email address:" + ex.getMessage());
+                System.exit(1);
+                return;
+            }
+        } else {
+            reportDelivery = new DirectoryReportDelivery(".");
         }
 
         new Web(arguments, warehouse, reportDelivery).run();
