@@ -4,10 +4,12 @@
 
 Video course companion code.
 
-## Section 3, Video 3
+## Section 3, Video 4
 
-Changes since _Section 3_, _Video 2_.
+Changes since _Section 3_, _Video 3_.
 
-* Introduced `ReportGeneration` interface as an example for the Strategy Pattern.
-* Add dependency to `ReportGeneration` into `Cli` and `Web`.
-* Used Dependency Inversion to allow replacing different report generation algorithms at runtime.
+* Update the `ReportDelivery` interface to be usable - the earlier version was just a "sketch".
+* Create an implementation of the `ReportDelivery` strategy called `EmailReportDelivery`.
+* Use the `EmailReportDelivery` as the concrete dependency for the `Cli` and `Web` classes.
+* Update Maven dependencies to include `javax.mail` used to send emails.
+* Use the actual `ReportDelivery` dependency inside `Cli` and `Web` "correctly" - handling possible exceptions.
