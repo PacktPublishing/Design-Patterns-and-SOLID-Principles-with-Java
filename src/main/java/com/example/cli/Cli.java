@@ -250,7 +250,7 @@ public final class Cli implements Runnable {
         } else if (type == ExportType.JSON) {
             exporter = new JsonExporter(report, out);
         } else {
-            throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", type));
+            throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", type));
         }
         exporter.export();
     }

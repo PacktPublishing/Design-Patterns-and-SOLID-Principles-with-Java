@@ -118,7 +118,7 @@ public class Web implements Runnable {
         } else if (exportType == ExportType.JSON) {
             exporter = new JsonExporter(report, new PrintStream(baos));
         } else {
-            throw new IllegalStateException(String.format("Choosen exporter %s not handled, this cannot happen.", reportType));
+            throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", reportType));
         }
         exporter.export();
 

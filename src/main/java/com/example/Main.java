@@ -61,7 +61,7 @@ public class Main {
         } catch (NumberFormatException ex) {
             System.err.println(String.format("Illegal client ID: %s. It must be an integer", str));
             System.exit(1);
-            // INFO: never returns 0 because of the exit class.
+            // INFO: never returns 0 because of the call to System.exit.
             return 0;
         }
     }
