@@ -51,6 +51,7 @@ public class Main {
 
     private static List<ReportDelivery> createReportDeliveries(int clientId) throws AddressException {
         List<ReportDelivery> result = new ArrayList<>();
+        result.add(new NoReportDelivery());
         if (clientId == 1) {
             result.add(new EmailReportDelivery("destination@demo.com"));
             result.add(new DirectoryReportDelivery("."));
