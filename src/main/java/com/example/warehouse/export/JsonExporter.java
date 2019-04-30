@@ -28,11 +28,18 @@ public class JsonExporter implements Exporter {
                 out.printf("\t\t\"%s\": ", label);
                 if (j == 0) {
                     // string field
-                    out.printf("\"%s\",%n", field);
-                } else if (j == 1) {
+                    out.printf("\"%s\"", field);
+                } else {
+                    // TODO: this is a hack, it is assumed that every JSON field will be a number field
+                    // expect the very first. This exporter needs type information to work correctly,
+                    // others don't and this piece of information is not available here.
                     // number field
-                    out.printf("%s%n", field);
+                    out.printf("%s", field);
                 }
+                if (j != report.getLabels().size() - 1) {
+                    out.print(",");
+                }
+                out.printf("%n");
             }
             out.print("\t}");
             if (i != records.size() - 1) {
