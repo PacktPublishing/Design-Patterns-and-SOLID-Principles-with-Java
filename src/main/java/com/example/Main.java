@@ -6,6 +6,7 @@ import com.example.warehouse.dal.*;
 import com.example.web.Web;
 
 import javax.mail.internet.AddressException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -32,24 +33,31 @@ public class Main {
 
         Warehouse warehouse = new Warehouse(productDao, customerDao, inventoryDao, orderDao, reportGeneration);
 
-        ReportDelivery reportDelivery;
-        if (clientId == 1) {
-            try {
-                reportDelivery = new EmailReportDelivery("destination@demo.com");
-            } catch (AddressException ex) {
-                System.err.println("Wrong email address:" + ex.getMessage());
-                System.exit(1);
-                return;
-            }
-        } else {
-            reportDelivery = new DirectoryReportDelivery(".");
+        List<ReportDelivery> reportDeliveries;
+        try {
+            reportDeliveries = createReportDeliveries(clientId);
+        } catch (AddressException ex) {
+            System.err.println("Wrong email address:" + ex.getMessage());
+            System.exit(1);
+            return;
         }
 
-        new Web(arguments, warehouse, reportDelivery).run();
-        new Cli(arguments, warehouse, reportDelivery).run();
+        new Web(arguments, warehouse, reportDeliveries).run();
+        new Cli(arguments, warehouse, reportDeliveries).run();
         // INFO: Needed because when Cli exists the Web
         // interface's thread will keep the app hanging.
         System.exit(0);
+    }
+
+    private static List<ReportDelivery> createReportDeliveries(int clientId) throws AddressException {
+        List<ReportDelivery> result = new ArrayList<>();
+        if (clientId == 1) {
+            result.add(new EmailReportDelivery("destination@demo.com"));
+            result.add(new DirectoryReportDelivery("."));
+        } else {
+            result.add(new DirectoryReportDelivery("."));
+        }
+        return result;
     }
 
     private static void checkClientId(List<String> arguments) {

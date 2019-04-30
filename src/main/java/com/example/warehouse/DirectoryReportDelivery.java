@@ -20,6 +20,11 @@ public class DirectoryReportDelivery implements ReportDelivery {
     }
 
     @Override
+    public String getName() {
+        return "File-based report delivery";
+    }
+
+    @Override
     public void deliver(Report.Type reportType, ExportType exportType, byte[] bytes) throws ReportDeliveryException {
         String timestamp = LocalDateTime.now().format(DATE_TIME_FORMATTER);
         String name = reportType.getDisplayName();

@@ -23,6 +23,11 @@ public class EmailReportDelivery implements ReportDelivery {
     }
 
     @Override
+    public String getName() {
+        return "Email-based report delivery";
+    }
+
+    @Override
     public void deliver(Report.Type reportType, ExportType exportType, byte[] bytes) throws ReportDeliveryException {
         try {
             MimeBodyPart msgBodyPart = new MimeBodyPart();

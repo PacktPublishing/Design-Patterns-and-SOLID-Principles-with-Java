@@ -2,4 +2,7 @@
 <pre>
 $export
 </pre>
+#if ($error)
+    <h4 style="color: red;">$error</h4>
+#end
 #parse("templates/footer.html.vm")

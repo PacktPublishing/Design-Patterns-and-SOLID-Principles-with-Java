@@ -32,12 +32,16 @@ public class Web implements Runnable {
 
     private final List<String> args;
     private final Warehouse warehouse;
-    private final ReportDelivery reportDelivery;
+    private final List<ReportDelivery> reportDeliveries;
 
-    public Web(List<String> args, Warehouse warehouse, ReportDelivery reportDelivery) {
+    private ReportDelivery activeReportDelivery;
+
+    public Web(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
         this.args = args;
         this.warehouse = warehouse;
-        this.reportDelivery = reportDelivery;
+        this.reportDeliveries = reportDeliveries;
+
+        activeReportDelivery = reportDeliveries.get(0);
     }
 
     public void run() {
@@ -49,9 +53,12 @@ public class Web implements Runnable {
         get("/orders", this::handleOrders);
         get("/reports", this::handleReports);
         get("/reports/export", this::handleExportReport);
+        get("/settings", this::handleSettings);
+        get("/settings/configure-report-delivery", this::handleConfigureReportDelivery);
         post("/products/add", this::handleAddProduct);
         post("/customers/add", this::handleAddCustomer);
         post("/orders/add", this::handleAddOrder);
+        post("/settings/configure-report-delivery/:choice", this::handleConfigureReportDelivery);
     }
 
     private <T extends Exception> void handleError(T t, Request req, Response res) {
@@ -122,16 +129,38 @@ public class Web implements Runnable {
         }
         exporter.export();
 
+        String error = null;
         try {
-            reportDelivery.deliver(reportType, exportType, baos.toByteArray());
+            activeReportDelivery.deliver(reportType, exportType, baos.toByteArray());
         } catch (ReportDeliveryException ex) {
+            error = ex.getMessage();
             System.err.println(ex.getMessage());
         }
 
-        Map<String, Object> model = Map.of(
-            "title", String.format("%s %s export", reportType.getDisplayName(), exportType),
-            "export", baos.toString());
+        Map<String, Object> model = new HashMap<>();
+        model.put("title", String.format("%s %s export", reportType.getDisplayName(), exportType));
+        model.put("error", error);
+        model.put("export", baos.toString());
         return render(model, "templates/export-report.html.vm");
+    }
+
+    private Object handleSettings(Request req, Response res) {
+        Map<String, Object> model = Map.of("title", "Manage settings");
+        return render(model, "templates/settings.html.vm");
+    }
+
+    private Object handleConfigureReportDelivery(Request req, Response res) throws WarehouseException {
+        if ("POST".equals(req.requestMethod())) {
+            int choice = Integer.valueOf(req.params(":choice"));
+            activeReportDelivery = reportDeliveries.get(choice - 1);
+            res.redirect("/settings");
+            return null;
+        } else {
+            Map<String, Object> model = Map.of(
+                "title", "Configure report delivery",
+                "reportDeliveries", reportDeliveries);
+            return render(model, "templates/configure-report-delivery.html.vm");
+        }
     }
 
     private Object handleAddProduct(Request req, Response res) throws WarehouseException {
