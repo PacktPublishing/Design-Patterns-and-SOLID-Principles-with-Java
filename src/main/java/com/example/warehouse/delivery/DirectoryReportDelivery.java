@@ -22,7 +22,7 @@ public class DirectoryReportDelivery extends AbstractReportDelivery {
     }
 
     @Override
-    public void deliver(Report.Type reportType, ExportType exportType, byte[] bytes) throws ReportDeliveryException {
+    protected void doDeliver(Report.Type reportType, ExportType exportType, byte[] bytes) throws ReportDeliveryException {
         String timestamp = LocalDateTime.now().format(DATE_TIME_FORMATTER);
         String name = reportType.getDisplayName();
         String extension = exportType.getFileExtension();

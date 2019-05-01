@@ -25,7 +25,7 @@ public class EmailReportDelivery extends AbstractReportDelivery {
     }
 
     @Override
-    public void deliver(Report.Type reportType, ExportType exportType, byte[] bytes) throws ReportDeliveryException {
+    protected void doDeliver(Report.Type reportType, ExportType exportType, byte[] bytes) throws ReportDeliveryException {
         try {
             MimeBodyPart msgBodyPart = new MimeBodyPart();
             msgBodyPart.setContent(String.format("Please the attached %s report.", exportType), "text/plain");

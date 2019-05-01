@@ -10,7 +10,17 @@ public class NoReportDelivery extends AbstractReportDelivery {
     }
 
     @Override
-    public void deliver(Report.Type reportType, ExportType exportType, byte[] bytes) {
+    protected void beforeDoDeliver() {
+        // INFO: no-op.
+    }
+
+    @Override
+    protected void doDeliver(Report.Type reportType, ExportType exportType, byte[] bytes) {
         // INFO: intentionally left empty.
+    }
+
+    @Override
+    protected void afterDoDeliver() {
+        // INFO: no-op.
     }
 }
