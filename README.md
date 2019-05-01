@@ -4,12 +4,10 @@
 
 Video course companion code.
 
-## Section 3, Video 4
+## Section 3, Video 5
 
-Changes since _Section 3_, _Video 3_.
+Changes since _Section 3_, _Video 4_.
 
-* Update the `ReportDelivery` interface to be usable - the earlier version was just a "sketch".
-* Create an implementation of the `ReportDelivery` strategy called `EmailReportDelivery`.
-* Use the `EmailReportDelivery` as the concrete dependency for the `Cli` and `Web` classes.
-* Update Maven dependencies to include `javax.mail` used to send emails.
-* Use the actual `ReportDelivery` dependency inside `Cli` and `Web` "correctly" - handling possible exceptions.
+* Create new `ReportDelivery` implementations: `DirectoryReportDelivery` and `NoReportDelivery`.
+* Update `Cli` and `Web` in order to allow users to select from multiple different strategies during runtime.
+Both the command-line and web interface are updated to include menu options users could use to switch between strategies.
