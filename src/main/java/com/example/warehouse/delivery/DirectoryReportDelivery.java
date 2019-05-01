@@ -1,5 +1,6 @@
-package com.example.warehouse;
+package com.example.warehouse.delivery;
 
+import com.example.warehouse.Report;
 import com.example.warehouse.export.ExportType;
 
 import java.io.IOException;
@@ -9,19 +10,15 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class DirectoryReportDelivery implements ReportDelivery {
+public class DirectoryReportDelivery extends AbstractReportDelivery {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss");
 
     private final Path dir;
 
     public DirectoryReportDelivery(String directoryPath) {
+        super("File-based report delivery");
         this.dir = Paths.get(directoryPath);
-    }
-
-    @Override
-    public String getName() {
-        return "File-based report delivery";
     }
 
     @Override

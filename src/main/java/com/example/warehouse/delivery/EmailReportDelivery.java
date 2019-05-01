@@ -1,5 +1,6 @@
-package com.example.warehouse;
+package com.example.warehouse.delivery;
 
+import com.example.warehouse.Report;
 import com.example.warehouse.export.ExportType;
 
 import javax.activation.DataHandler;
@@ -8,7 +9,7 @@ import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
 import java.util.Properties;
 
-public class EmailReportDelivery implements ReportDelivery {
+public class EmailReportDelivery extends AbstractReportDelivery {
 
     private final InternetAddress fromAddress = new InternetAddress("demo@example.com");
     private final InternetAddress toAddress;
@@ -16,15 +17,11 @@ public class EmailReportDelivery implements ReportDelivery {
     private final Properties prop;
 
     public EmailReportDelivery(String toAddress) throws AddressException {
+        super("Email-based report delivery");
         this.toAddress = new InternetAddress(toAddress);
 
         prop = new Properties();
         prop.put("mail.smtp.port", "2500");
-    }
-
-    @Override
-    public String getName() {
-        return "Email-based report delivery";
     }
 
     @Override

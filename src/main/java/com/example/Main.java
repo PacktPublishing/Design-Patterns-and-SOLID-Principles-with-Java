@@ -1,8 +1,15 @@
 package com.example;
 
 import com.example.cli.Cli;
-import com.example.warehouse.*;
+import com.example.warehouse.AlternativeReportGeneration;
+import com.example.warehouse.DefaultReportGeneration;
+import com.example.warehouse.ReportGeneration;
+import com.example.warehouse.Warehouse;
 import com.example.warehouse.dal.*;
+import com.example.warehouse.delivery.DirectoryReportDelivery;
+import com.example.warehouse.delivery.EmailReportDelivery;
+import com.example.warehouse.delivery.NoReportDelivery;
+import com.example.warehouse.delivery.ReportDelivery;
 import com.example.web.Web;
 
 import javax.mail.internet.AddressException;

@@ -1,12 +1,12 @@
-package com.example.warehouse;
+package com.example.warehouse.delivery;
 
+import com.example.warehouse.Report;
 import com.example.warehouse.export.ExportType;
 
-public class NoReportDelivery implements ReportDelivery {
+public class NoReportDelivery extends AbstractReportDelivery {
 
-    @Override
-    public String getName() {
-        return "No report delivery";
+    public NoReportDelivery() {
+        super("No report delivery");
     }
 
     @Override

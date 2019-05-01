@@ -1,6 +1,8 @@
 package com.example.cli;
 
 import com.example.warehouse.*;
+import com.example.warehouse.delivery.ReportDelivery;
+import com.example.warehouse.delivery.ReportDeliveryException;
 import com.example.warehouse.export.*;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 

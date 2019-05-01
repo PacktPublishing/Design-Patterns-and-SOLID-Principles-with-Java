@@ -1,4 +1,6 @@
-package com.example.warehouse;
+package com.example.warehouse.delivery;
+
+import com.example.warehouse.WarehouseException;
 
 public final class ReportDeliveryException extends WarehouseException {
 
