@@ -25,7 +25,8 @@ public final class Warehouse {
         ProductDao productDao,
         CustomerDao customerDao,
         InventoryDao inventoryDao,
-        OrderDao orderDao, ReportGeneration reportGeneration) {
+        OrderDao orderDao,
+        ReportGeneration reportGeneration) {
         this.productDao = productDao;
         this.customerDao = customerDao;
         this.inventoryDao = inventoryDao;

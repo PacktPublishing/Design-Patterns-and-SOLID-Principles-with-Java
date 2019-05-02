@@ -4,10 +4,10 @@
 
 Video course companion code.
 
-## Section 3, Video 5
+## Section 4, Video 1
 
-Changes since _Section 3_, _Video 4_.
+Changes since _Section 3_, _Video 5_.
 
-* Create new `ReportDelivery` implementations: `DirectoryReportDelivery` and `NoReportDelivery`.
-* Update `Cli` and `Web` in order to allow users to select from multiple different strategies during runtime.
-Both the command-line and web interface are updated to include menu options users could use to switch between strategies.
+* Moved classes related to `ReportDelivery` into package `delivery`.
+* Create `AbstractReportDelivery` to demonstrate how to mix the Strategy and Template Method patterns.
+* Refactor `ReportDelivery` implementations to depend on `AbstractReportDelivery`.
