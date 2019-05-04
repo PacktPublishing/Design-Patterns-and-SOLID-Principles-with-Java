@@ -1,11 +1,8 @@
 package com.example;
 
 import com.example.cli.Cli;
-import com.example.warehouse.AlternativeReportGeneration;
-import com.example.warehouse.DefaultReportGeneration;
-import com.example.warehouse.ReportGeneration;
 import com.example.warehouse.Warehouse;
-import com.example.warehouse.dal.*;
+import com.example.warehouse.WarehouseFactory;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
@@ -24,21 +21,14 @@ public class Main {
         checkClientId(arguments);
         int clientId = parseClientId(arguments.get(0));
 
-        ProductDao productDao = new DbProductDao();
-        CustomerDao customerDao = new DbCustomerDao();
-        InventoryDao inventoryDao = new DbInventoryDao();
-        OrderDao orderDao = new DbOrderDao();
-
-        ReportGeneration reportGeneration;
+        Warehouse warehouse;
         if (clientId == 1) {
-            reportGeneration = new DefaultReportGeneration(orderDao);
+            warehouse = WarehouseFactory.createDbWarehouseClient1();
         } else if (clientId == 2) {
-            reportGeneration = new AlternativeReportGeneration(orderDao);
+            warehouse = WarehouseFactory.createDbWarehouseClient2();
         } else {
             throw new IllegalStateException("Unknown client ID: " + clientId);
         }
-
-        Warehouse warehouse = new Warehouse(productDao, customerDao, inventoryDao, orderDao, reportGeneration);
 
         List<ReportDelivery> reportDeliveries;
         try {
