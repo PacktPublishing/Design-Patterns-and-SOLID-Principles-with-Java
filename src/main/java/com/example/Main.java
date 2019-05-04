@@ -2,7 +2,7 @@ package com.example;
 
 import com.example.cli.Cli;
 import com.example.warehouse.Warehouse;
-import com.example.warehouse.WarehouseFactory;
+import com.example.warehouse.Warehouses;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
@@ -23,9 +23,9 @@ public class Main {
 
         Warehouse warehouse;
         if (clientId == 1) {
-            warehouse = WarehouseFactory.createDbWarehouseClient1();
+            warehouse = Warehouses.newDbWarehouseClient1();
         } else if (clientId == 2) {
-            warehouse = WarehouseFactory.createDbWarehouseClient2();
+            warehouse = Warehouses.newDbWarehouseClient2();
         } else {
             throw new IllegalStateException("Unknown client ID: " + clientId);
         }
