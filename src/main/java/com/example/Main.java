@@ -24,10 +24,10 @@ public class Main {
         checkClientId(arguments);
         int clientId = parseClientId(arguments.get(0));
 
-        ProductDao productDao = new MemoryProductDao();
+        ProductDao productDao = new DbProductDao();
         CustomerDao customerDao = new DbCustomerDao();
-        InventoryDao inventoryDao = new MemoryInventoryDao(productDao);
-        OrderDao orderDao = new MemoryOrderDao(productDao, customerDao);
+        InventoryDao inventoryDao = new DbInventoryDao();
+        OrderDao orderDao = new DbOrderDao();
 
         ReportGeneration reportGeneration;
         if (clientId == 1) {
