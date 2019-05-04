@@ -86,6 +86,7 @@ public final class Warehouse {
         }
         inventoryDao.updateStock(mappedQuantities);
         Order order = new Order(customer, mappedQuantities);
+        // TODO: updating stock and adding order should be atomic.
         orderDao.addOrder(order);
     }
 

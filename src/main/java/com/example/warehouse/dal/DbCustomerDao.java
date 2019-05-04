@@ -8,24 +8,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public final class DbCustomerDao implements CustomerDao {
-
-    // INFO: on first connection the in-memory DB will be initialized by init.sql located on the classpath.
-    private static final String DEFAULT_JDBC_URL = "jdbc:h2:mem:warehouse;INIT=RUNSCRIPT FROM 'classpath:scripts/init.sql'";
+public final class DbCustomerDao extends AbstractDbDao implements CustomerDao {
 
     public DbCustomerDao() {
     }
 
     @Override
     public Collection<Customer> getCustomers() throws WarehouseException {
-        try (Connection connection = DriverManager.getConnection(DEFAULT_JDBC_URL);
+        try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             List<Customer> customers = new ArrayList<>();
             try (ResultSet rs = statement.executeQuery("SELECT * FROM customers")) {
                 while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String name = rs.getString("name");
-                    customers.add(new Customer(id, name));
+                    customers.add(toCustomer(rs));
                 }
             }
             return customers;
@@ -36,9 +31,8 @@ public final class DbCustomerDao implements CustomerDao {
 
     @Override
     public Customer getCustomer(int id) throws WarehouseException {
-        try (Connection connection = DriverManager.getConnection(DEFAULT_JDBC_URL);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM customers WHERE id = ?")) {
-            List<Customer> customers = new ArrayList<>();
             statement.setInt(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
