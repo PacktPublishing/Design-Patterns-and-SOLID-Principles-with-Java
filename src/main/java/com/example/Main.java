@@ -21,14 +21,7 @@ public class Main {
         checkClientId(arguments);
         int clientId = parseClientId(arguments.get(0));
 
-        Warehouse warehouse;
-        if (clientId == 1) {
-            warehouse = Warehouses.newDbWarehouseClient1();
-        } else if (clientId == 2) {
-            warehouse = Warehouses.newDbWarehouseClient2();
-        } else {
-            throw new IllegalStateException("Unknown client ID: " + clientId);
-        }
+        Warehouse warehouse = Warehouses.newDbWarehouse(clientId);
 
         List<ReportDelivery> reportDeliveries;
         try {
