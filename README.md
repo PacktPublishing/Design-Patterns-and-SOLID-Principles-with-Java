@@ -4,12 +4,11 @@
 
 Video course companion code.
 
-## Section 4, Video 1
+## Section 4, Video 2
 
-Changes since _Section 3_, _Video 5_.
+Changes since _Section 4_, _Video 1_.
 
-* Moved classes related to `ReportDelivery` into package `delivery`.
-* Create `AbstractReportDelivery` to demonstrate how to mix the Strategy and Template Method patterns.
-* Refactor `ReportDelivery` implementations to depend on `AbstractReportDelivery`.
-* Add database-based DAO implementations - made the application use this by default (updated `init.sql` along the way,
-it contains the same set of date as the `.csv` files).
+* Create `Warehouses` "Simple" Factory class.
+* Use it in `Main`: remove logic that instantiates `Warehouse` instances and moved it to factory methods in
+`Warehouses`.
+* Add a simple `WarehouseTest` class that relies on `Warehouses`. 
