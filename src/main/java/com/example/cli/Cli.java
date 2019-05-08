@@ -3,15 +3,14 @@ package com.example.cli;
 import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
-import com.example.warehouse.export.ExportType;
-import com.example.warehouse.export.Exporter;
+import com.example.warehouse.export.*;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public abstract class Cli implements Runnable {
+public class Cli implements Runnable {
 
     static final class MenuOption {
 
@@ -95,7 +94,7 @@ public abstract class Cli implements Runnable {
 
     private ReportDelivery activeReportDelivery;
 
-    Cli(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
+    public Cli(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
         this.args = args;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
@@ -144,7 +143,19 @@ public abstract class Cli implements Runnable {
         }
     }
 
-    abstract Exporter newExporter(Report report, ExportType type, PrintStream out);
+    Exporter newExporter(Report report, ExportType type, PrintStream out) {
+        if (type == ExportType.CSV) {
+            return new CsvExporter(report, out, true);
+        } else if (type == ExportType.TXT) {
+            return new TxtExporter(report, out);
+        } else if (type == ExportType.HTML) {
+            return new HtmlExporter(report, out);
+        } else if (type == ExportType.JSON) {
+            return new JsonExporter(report, out);
+        } else {
+            throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", type));
+        }
+    }
 
     private void displayMainMenu() {
         displayMenu(MAIN_MENU_OPTIONS);

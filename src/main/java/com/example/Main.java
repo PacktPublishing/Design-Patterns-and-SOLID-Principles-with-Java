@@ -1,7 +1,6 @@
 package com.example;
 
 import com.example.cli.Cli;
-import com.example.cli.FullCli;
 import com.example.cli.TrialCli;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.Warehouses;
@@ -9,7 +8,6 @@ import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
-import com.example.web.FullWeb;
 import com.example.web.TrialWeb;
 import com.example.web.Web;
 
@@ -42,8 +40,8 @@ public class Main {
         Web web;
         Cli cli;
         if (FULL_VERSION) {
-            web = new FullWeb(arguments, warehouse, reportDeliveries);
-            cli = new FullCli(arguments, warehouse, reportDeliveries);
+            web = new Web(arguments, warehouse, reportDeliveries);
+            cli = new Cli(arguments, warehouse, reportDeliveries);
         } else {
             web = new TrialWeb(arguments, warehouse, reportDeliveries);
             cli = new TrialCli(arguments, warehouse, reportDeliveries);
