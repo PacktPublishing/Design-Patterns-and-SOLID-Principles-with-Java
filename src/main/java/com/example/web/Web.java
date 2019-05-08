@@ -1,5 +1,6 @@
 package com.example.web;
 
+import com.example.Main;
 import com.example.warehouse.Report;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
@@ -120,16 +121,24 @@ public class Web implements Runnable {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Report report = warehouse.generateReport(reportType);
         Exporter exporter;
-        if (exportType == ExportType.CSV) {
-            exporter = new CsvExporter(report, new PrintStream(baos), true);
-        } else if (exportType == ExportType.TXT) {
-            exporter = new TxtExporter(report, new PrintStream(baos));
-        } else if (exportType == ExportType.HTML) {
-            exporter = new HtmlExporter(report, new PrintStream(new HtmlEscaperOutputStream(baos)));
-        } else if (exportType == ExportType.JSON) {
-            exporter = new JsonExporter(report, new PrintStream(baos));
+        if (Main.FULL_VERSION) {
+            if (exportType == ExportType.CSV) {
+                exporter = new CsvExporter(report, new PrintStream(baos), true);
+            } else if (exportType == ExportType.TXT) {
+                exporter = new TxtExporter(report, new PrintStream(baos));
+            } else if (exportType == ExportType.HTML) {
+                exporter = new HtmlExporter(report, new PrintStream(new HtmlEscaperOutputStream(baos)));
+            } else if (exportType == ExportType.JSON) {
+                exporter = new JsonExporter(report, new PrintStream(baos));
+            } else {
+                throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", reportType));
+            }
         } else {
-            throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", reportType));
+            if (exportType == ExportType.TXT) {
+                exporter = new TxtExporter(report, new PrintStream(baos));
+            } else {
+                throw new UnsupportedOperationException(String.format("Chosen exporter %s not available.", reportType));
+            }
         }
         exporter.export();
 

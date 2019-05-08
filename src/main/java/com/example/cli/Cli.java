@@ -1,5 +1,6 @@
 package com.example.cli;
 
+import com.example.Main;
 import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
@@ -286,16 +287,24 @@ public final class Cli implements Runnable {
 
     private void doReportExport(Report report, ExportType type, PrintStream out) {
         Exporter exporter;
-        if (type == ExportType.CSV) {
-            exporter = new CsvExporter(report, out, true);
-        } else if (type == ExportType.TXT) {
-            exporter = new TxtExporter(report, out);
-        } else if (type == ExportType.HTML) {
-            exporter = new HtmlExporter(report, out);
-        } else if (type == ExportType.JSON) {
-            exporter = new JsonExporter(report, out);
+        if (Main.FULL_VERSION) {
+            if (type == ExportType.CSV) {
+                exporter = new CsvExporter(report, out, true);
+            } else if (type == ExportType.TXT) {
+                exporter = new TxtExporter(report, out);
+            } else if (type == ExportType.HTML) {
+                exporter = new HtmlExporter(report, out);
+            } else if (type == ExportType.JSON) {
+                exporter = new JsonExporter(report, out);
+            } else {
+                throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", type));
+            }
         } else {
-            throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", type));
+            if (type == ExportType.TXT) {
+                exporter = new TxtExporter(report, out);
+            } else {
+                throw new UnsupportedOperationException(String.format("Chosen exporter %s not available.", type));
+            }
         }
         exporter.export();
     }
