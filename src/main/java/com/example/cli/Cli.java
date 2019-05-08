@@ -1,17 +1,17 @@
 package com.example.cli;
 
-import com.example.Main;
 import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
-import com.example.warehouse.export.*;
+import com.example.warehouse.export.ExportType;
+import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public final class Cli implements Runnable {
+public abstract class Cli implements Runnable {
 
     static final class MenuOption {
 
@@ -95,7 +95,7 @@ public final class Cli implements Runnable {
 
     private ReportDelivery activeReportDelivery;
 
-    public Cli(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
+    Cli(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
         this.args = args;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
@@ -143,6 +143,8 @@ public final class Cli implements Runnable {
             }
         }
     }
+
+    abstract Exporter newExporter(Report report, ExportType type, PrintStream out);
 
     private void displayMainMenu() {
         displayMenu(MAIN_MENU_OPTIONS);
@@ -286,26 +288,7 @@ public final class Cli implements Runnable {
     }
 
     private void doReportExport(Report report, ExportType type, PrintStream out) {
-        Exporter exporter;
-        if (Main.FULL_VERSION) {
-            if (type == ExportType.CSV) {
-                exporter = new CsvExporter(report, out, true);
-            } else if (type == ExportType.TXT) {
-                exporter = new TxtExporter(report, out);
-            } else if (type == ExportType.HTML) {
-                exporter = new HtmlExporter(report, out);
-            } else if (type == ExportType.JSON) {
-                exporter = new JsonExporter(report, out);
-            } else {
-                throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", type));
-            }
-        } else {
-            if (type == ExportType.TXT) {
-                exporter = new TxtExporter(report, out);
-            } else {
-                throw new UnsupportedOperationException(String.format("Chosen exporter %s not available.", type));
-            }
-        }
+        Exporter exporter = newExporter(report, type, out);
         exporter.export();
     }
 

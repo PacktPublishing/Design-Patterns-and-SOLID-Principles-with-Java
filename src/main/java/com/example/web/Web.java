@@ -1,20 +1,19 @@
 package com.example.web;
 
-import com.example.Main;
 import com.example.warehouse.Report;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
-import com.example.warehouse.export.*;
-import com.example.web.util.HtmlEscaperOutputStream;
+import com.example.warehouse.export.ExportType;
+import com.example.warehouse.export.Exporter;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
-public class Web implements Runnable {
+public abstract class Web implements Runnable {
 
     private static final int PORT = 8080;
 
@@ -41,7 +40,7 @@ public class Web implements Runnable {
 
     private ReportDelivery activeReportDelivery;
 
-    public Web(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
+    Web(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
         this.args = args;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
@@ -65,6 +64,8 @@ public class Web implements Runnable {
         post("/orders/add", this::handleAddOrder);
         post("/settings/configure-report-delivery/:choice", this::handleConfigureReportDelivery);
     }
+
+    abstract Exporter newExporter(Report report, ExportType exportType, OutputStream baos);
 
     private <T extends Exception> void handleError(T t, Request req, Response res) {
         StringWriter writer = new StringWriter();
@@ -120,26 +121,7 @@ public class Web implements Runnable {
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Report report = warehouse.generateReport(reportType);
-        Exporter exporter;
-        if (Main.FULL_VERSION) {
-            if (exportType == ExportType.CSV) {
-                exporter = new CsvExporter(report, new PrintStream(baos), true);
-            } else if (exportType == ExportType.TXT) {
-                exporter = new TxtExporter(report, new PrintStream(baos));
-            } else if (exportType == ExportType.HTML) {
-                exporter = new HtmlExporter(report, new PrintStream(new HtmlEscaperOutputStream(baos)));
-            } else if (exportType == ExportType.JSON) {
-                exporter = new JsonExporter(report, new PrintStream(baos));
-            } else {
-                throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", reportType));
-            }
-        } else {
-            if (exportType == ExportType.TXT) {
-                exporter = new TxtExporter(report, new PrintStream(baos));
-            } else {
-                throw new UnsupportedOperationException(String.format("Chosen exporter %s not available.", reportType));
-            }
-        }
+        Exporter exporter = newExporter(report, exportType, baos);
         exporter.export();
 
         String error = null;

@@ -1,12 +1,16 @@
 package com.example;
 
 import com.example.cli.Cli;
+import com.example.cli.FullCli;
+import com.example.cli.TrialCli;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.Warehouses;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
+import com.example.web.FullWeb;
+import com.example.web.TrialWeb;
 import com.example.web.Web;
 
 import javax.mail.internet.AddressException;
@@ -15,7 +19,7 @@ import java.util.List;
 
 public class Main {
 
-    public static final boolean FULL_VERSION = Boolean.valueOf(
+    private static final boolean FULL_VERSION = Boolean.valueOf(
         System.getProperty("FULL_VERSION", "false"));
 
     public static void main(String[] args) {
@@ -35,8 +39,17 @@ public class Main {
             return;
         }
 
-        new Web(arguments, warehouse, reportDeliveries).run();
-        new Cli(arguments, warehouse, reportDeliveries).run();
+        Web web;
+        Cli cli;
+        if (FULL_VERSION) {
+            web = new FullWeb(arguments, warehouse, reportDeliveries);
+            cli = new FullCli(arguments, warehouse, reportDeliveries);
+        } else {
+            web = new TrialWeb(arguments, warehouse, reportDeliveries);
+            cli = new TrialCli(arguments, warehouse, reportDeliveries);
+        }
+        web.run();
+        cli.run();
         // INFO: Needed because when Cli exists the Web
         // interface's thread will keep the app hanging.
         System.exit(0);
