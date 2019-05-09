@@ -68,7 +68,7 @@ public class Web implements Runnable {
         } else if (exportType == ExportType.TXT) {
             return new TxtExporter(report, new PrintStream(baos));
         } else if (exportType == ExportType.HTML) {
-            return new HtmlExporter(report, new PrintStream(new HtmlEscaperOutputStream(baos)));
+            return new HtmlExporter(report, new PrintStream(baos));
         } else if (exportType == ExportType.JSON) {
             return new JsonExporter(report, new PrintStream(baos));
         }
@@ -143,8 +143,26 @@ public class Web implements Runnable {
         Map<String, Object> model = new HashMap<>();
         model.put("title", String.format("%s %s export", reportType.getDisplayName(), exportType));
         model.put("error", error);
-        model.put("export", baos.toString());
+        model.put("export", exportToString(exportType, baos));
         return render(model, "templates/export-report.html.vm");
+    }
+
+    private String exportToString(ExportType exportType, ByteArrayOutputStream baos) {
+        // INFO: after refactoring the Cli and Web classes to rely on an ExportFactory in order
+        // to share the same exporter instantiation logic between the two classes the way HTML
+        // export result is presented needed to be moved *after* the export happened, otherwise
+        // this could have been done only by code modification that would disrupt the flow of the
+        // companion videos narrative, hence *this* code.
+        if (exportType == ExportType.HTML) {
+            ByteArrayOutputStream temp = new ByteArrayOutputStream();
+            try {
+                baos.writeTo(new HtmlEscaperOutputStream(temp));
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+            return temp.toString();
+        }
+        return baos.toString();
     }
 
     private Object handleSettings(Request req, Response res) {
@@ -152,7 +170,7 @@ public class Web implements Runnable {
         return render(model, "templates/settings.html.vm");
     }
 
-    private Object handleConfigureReportDelivery(Request req, Response res) throws WarehouseException {
+    private Object handleConfigureReportDelivery(Request req, Response res) {
         if ("POST".equals(req.requestMethod())) {
             int choice = Integer.valueOf(req.params(":choice"));
             activeReportDelivery = reportDeliveries.get(choice - 1);
