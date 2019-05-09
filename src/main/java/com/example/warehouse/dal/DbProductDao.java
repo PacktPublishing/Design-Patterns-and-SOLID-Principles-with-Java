@@ -32,7 +32,7 @@ public final class DbProductDao extends AbstractDbDao implements ProductDao {
     @Override
     public Product getProduct(int id) throws WarehouseException {
         try (Connection connection = getConnection();
-                      PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE id = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE id = ?")) {
             statement.setInt(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
