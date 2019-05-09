@@ -5,14 +5,19 @@ import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
-import com.example.warehouse.export.*;
+import com.example.warehouse.export.ExportType;
+import com.example.warehouse.export.Exporter;
+import com.example.warehouse.export.ExporterFactory;
 import com.example.web.util.HtmlEscaperOutputStream;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.velocity.VelocityTemplateEngine;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,13 +37,19 @@ public class Web implements Runnable {
     }
 
     private final List<String> args;
+    private final ExporterFactory exporterFactory;
     private final Warehouse warehouse;
     private final List<ReportDelivery> reportDeliveries;
 
     private ReportDelivery activeReportDelivery;
 
-    public Web(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
+    public Web(
+        List<String> args,
+        ExporterFactory exporterFactory,
+        Warehouse warehouse,
+        List<ReportDelivery> reportDeliveries) {
         this.args = args;
+        this.exporterFactory = exporterFactory;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
 
@@ -60,19 +71,6 @@ public class Web implements Runnable {
         post("/customers/add", this::handleAddCustomer);
         post("/orders/add", this::handleAddOrder);
         post("/settings/configure-report-delivery/:choice", this::handleConfigureReportDelivery);
-    }
-
-    Exporter newExporter(Report report, ExportType exportType, OutputStream baos) {
-        if (exportType == ExportType.CSV) {
-            return new CsvExporter(report, new PrintStream(baos), true);
-        } else if (exportType == ExportType.TXT) {
-            return new TxtExporter(report, new PrintStream(baos));
-        } else if (exportType == ExportType.HTML) {
-            return new HtmlExporter(report, new PrintStream(baos));
-        } else if (exportType == ExportType.JSON) {
-            return new JsonExporter(report, new PrintStream(baos));
-        }
-        throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", exportType));
     }
 
     private <T extends Exception> void handleError(T t, Request req, Response res) {
@@ -129,7 +127,7 @@ public class Web implements Runnable {
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Report report = warehouse.generateReport(reportType);
-        Exporter exporter = newExporter(report, exportType, baos);
+        Exporter exporter = exporterFactory.newExporter(report, exportType, baos);
         exporter.export();
 
         String error = null;

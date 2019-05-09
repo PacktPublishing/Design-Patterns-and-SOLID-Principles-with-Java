@@ -3,7 +3,9 @@ package com.example.cli;
 import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
-import com.example.warehouse.export.*;
+import com.example.warehouse.export.ExportType;
+import com.example.warehouse.export.Exporter;
+import com.example.warehouse.export.ExporterFactory;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 
 import java.io.PrintStream;
@@ -89,13 +91,15 @@ public class Cli implements Runnable {
     private final List<MenuOption> reportDeliveryOptions = new ArrayList<>();
 
     private final List<String> args;
+    private final ExporterFactory exporterFactory;
     private final Warehouse warehouse;
     private final List<ReportDelivery> reportDeliveries;
 
     private ReportDelivery activeReportDelivery;
 
-    public Cli(List<String> args, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
+    public Cli(List<String> args, ExporterFactory exporterFactory, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
         this.args = args;
+        this.exporterFactory = exporterFactory;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
 
@@ -140,20 +144,6 @@ public class Cli implements Runnable {
             } catch (IllegalArgumentException | UnsupportedOperationException ex) {
                 System.err.println(ex.getMessage());
             }
-        }
-    }
-
-    Exporter newExporter(Report report, ExportType type, PrintStream out) {
-        if (type == ExportType.CSV) {
-            return new CsvExporter(report, out, true);
-        } else if (type == ExportType.TXT) {
-            return new TxtExporter(report, out);
-        } else if (type == ExportType.HTML) {
-            return new HtmlExporter(report, out);
-        } else if (type == ExportType.JSON) {
-            return new JsonExporter(report, out);
-        } else {
-            throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", type));
         }
     }
 
@@ -299,7 +289,7 @@ public class Cli implements Runnable {
     }
 
     private void doReportExport(Report report, ExportType type, PrintStream out) {
-        Exporter exporter = newExporter(report, type, out);
+        Exporter exporter = exporterFactory.newExporter(report, type, out);
         exporter.export();
     }
 

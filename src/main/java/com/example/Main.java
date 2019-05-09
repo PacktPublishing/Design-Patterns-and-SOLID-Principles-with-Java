@@ -1,14 +1,14 @@
 package com.example;
 
 import com.example.cli.Cli;
-import com.example.cli.TrialCli;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.Warehouses;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
-import com.example.web.TrialWeb;
+import com.example.warehouse.export.ExporterFactory;
+import com.example.warehouse.export.TrialExporterFactory;
 import com.example.web.Web;
 
 import javax.mail.internet.AddressException;
@@ -37,17 +37,12 @@ public class Main {
             return;
         }
 
-        Web web;
-        Cli cli;
-        if (FULL_VERSION) {
-            web = new Web(arguments, warehouse, reportDeliveries);
-            cli = new Cli(arguments, warehouse, reportDeliveries);
-        } else {
-            web = new TrialWeb(arguments, warehouse, reportDeliveries);
-            cli = new TrialCli(arguments, warehouse, reportDeliveries);
-        }
-        web.run();
-        cli.run();
+        ExporterFactory exporterFactory = FULL_VERSION
+            ? new ExporterFactory()
+            : new TrialExporterFactory();
+        new Web(arguments, exporterFactory, warehouse, reportDeliveries).run();
+        new Cli(arguments, exporterFactory, warehouse, reportDeliveries).run();
+
         // INFO: Needed because when Cli exists the Web
         // interface's thread will keep the app hanging.
         System.exit(0);
