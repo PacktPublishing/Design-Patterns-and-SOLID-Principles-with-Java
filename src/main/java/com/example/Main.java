@@ -8,6 +8,7 @@ import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.export.ExporterFactory;
+import com.example.warehouse.export.FullExporterFactory;
 import com.example.warehouse.export.TrialExporterFactory;
 import com.example.web.Web;
 
@@ -38,7 +39,7 @@ public class Main {
         }
 
         ExporterFactory exporterFactory = FULL_VERSION
-            ? new ExporterFactory()
+            ? new FullExporterFactory()
             : new TrialExporterFactory();
         new Web(arguments, exporterFactory, warehouse, reportDeliveries).run();
         new Cli(arguments, exporterFactory, warehouse, reportDeliveries).run();

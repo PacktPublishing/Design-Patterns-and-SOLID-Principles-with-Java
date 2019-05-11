@@ -5,7 +5,7 @@ import com.example.warehouse.Report;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-public class TrialExporterFactory extends ExporterFactory {
+public final class TrialExporterFactory implements ExporterFactory {
 
     @Override
     public Exporter newExporter(Report report, ExportType type, OutputStream out) {
