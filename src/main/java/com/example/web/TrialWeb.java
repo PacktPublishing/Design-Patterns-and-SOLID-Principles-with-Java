@@ -18,7 +18,7 @@ public class TrialWeb extends Web {
     }
 
     @Override
-    Exporter newExporter(Report report, ExportType type, OutputStream baos) {
+    protected Exporter newExporter(Report report, ExportType type, OutputStream baos) {
         if (type == ExportType.TXT) {
             return new TxtExporter(report, new PrintStream(baos));
         }

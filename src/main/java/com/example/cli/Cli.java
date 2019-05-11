@@ -1,16 +1,18 @@
 package com.example.cli;
 
+import com.example.App;
 import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
-import com.example.warehouse.export.*;
+import com.example.warehouse.export.ExportType;
+import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public class Cli implements Runnable {
+public class Cli extends App implements Runnable {
 
     static final class MenuOption {
 
@@ -140,20 +142,6 @@ public class Cli implements Runnable {
             } catch (IllegalArgumentException | UnsupportedOperationException ex) {
                 System.err.println(ex.getMessage());
             }
-        }
-    }
-
-    Exporter newExporter(Report report, ExportType type, PrintStream out) {
-        if (type == ExportType.CSV) {
-            return new CsvExporter(report, out, true);
-        } else if (type == ExportType.TXT) {
-            return new TxtExporter(report, out);
-        } else if (type == ExportType.HTML) {
-            return new HtmlExporter(report, out);
-        } else if (type == ExportType.JSON) {
-            return new JsonExporter(report, out);
-        } else {
-            throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", type));
         }
     }
 

@@ -1,11 +1,13 @@
 package com.example.web;
 
+import com.example.App;
 import com.example.warehouse.Report;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
-import com.example.warehouse.export.*;
+import com.example.warehouse.export.ExportType;
+import com.example.warehouse.export.Exporter;
 import com.example.web.util.HtmlEscaperOutputStream;
 import spark.ModelAndView;
 import spark.Request;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
-public class Web implements Runnable {
+public class Web extends App implements Runnable {
 
     private static final int PORT = 8080;
 
@@ -60,19 +62,6 @@ public class Web implements Runnable {
         post("/customers/add", this::handleAddCustomer);
         post("/orders/add", this::handleAddOrder);
         post("/settings/configure-report-delivery/:choice", this::handleConfigureReportDelivery);
-    }
-
-    Exporter newExporter(Report report, ExportType exportType, OutputStream baos) {
-        if (exportType == ExportType.CSV) {
-            return new CsvExporter(report, new PrintStream(baos), true);
-        } else if (exportType == ExportType.TXT) {
-            return new TxtExporter(report, new PrintStream(baos));
-        } else if (exportType == ExportType.HTML) {
-            return new HtmlExporter(report, new PrintStream(baos));
-        } else if (exportType == ExportType.JSON) {
-            return new JsonExporter(report, new PrintStream(baos));
-        }
-        throw new IllegalStateException(String.format("Chosen exporter %s not handled, this cannot happen.", exportType));
     }
 
     private <T extends Exception> void handleError(T t, Request req, Response res) {
@@ -129,7 +118,7 @@ public class Web implements Runnable {
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Report report = warehouse.generateReport(reportType);
-        Exporter exporter = newExporter(report, exportType, baos);
+        Exporter exporter = newExporter(report, exportType, new PrintStream(baos));
         exporter.export();
 
         String error = null;

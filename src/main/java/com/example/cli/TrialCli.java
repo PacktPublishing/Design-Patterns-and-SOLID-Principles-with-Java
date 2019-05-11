@@ -7,6 +7,7 @@ import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.TxtExporter;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -17,11 +18,10 @@ public class TrialCli extends Cli {
     }
 
     @Override
-    Exporter newExporter(Report report, ExportType type, PrintStream out) {
+    protected Exporter newExporter(Report report, ExportType type, OutputStream out) {
         if (type == ExportType.TXT) {
-            return new TxtExporter(report, out);
-        } else {
-            throw new UnsupportedOperationException(String.format("Chosen exporter %s not available.", type));
+            return new TxtExporter(report, new PrintStream(out));
         }
+        throw new UnsupportedOperationException(String.format("Chosen exporter %s not available.", type));
     }
 }
