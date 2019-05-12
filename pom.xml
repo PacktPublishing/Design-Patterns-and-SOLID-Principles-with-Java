@@ -46,6 +46,12 @@
             <version>1.7.26</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- INFO: used to draw charts of reports. -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.0</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

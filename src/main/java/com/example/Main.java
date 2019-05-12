@@ -18,7 +18,7 @@ import java.util.List;
 
 public class Main {
 
-    private static final boolean FULL_VERSION = Boolean.valueOf(
+    public static final boolean FULL_VERSION = Boolean.valueOf(
         System.getProperty("FULL_VERSION", "false"));
 
     public static void main(String[] args) {

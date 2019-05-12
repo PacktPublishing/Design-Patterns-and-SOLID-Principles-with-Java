@@ -1,5 +1,6 @@
 package com.example.web;
 
+import com.example.Main;
 import com.example.warehouse.Report;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
@@ -8,20 +9,18 @@ import com.example.warehouse.delivery.ReportDeliveryException;
 import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.ExporterFactory;
+import com.example.warehouse.plot.ChartPlotter;
+import com.example.warehouse.plot.ChartType;
+import com.example.warehouse.plot.ComplexChartPlotter;
+import com.example.warehouse.plot.DummyChartPlotter;
 import com.example.web.util.HtmlEscaperOutputStream;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.template.velocity.VelocityTemplateEngine;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static spark.Spark.*;
@@ -65,6 +64,8 @@ public class Web implements Runnable {
         get("/orders", this::handleOrders);
         get("/reports", this::handleReports);
         get("/reports/export", this::handleExportReport);
+        get("/charts", this::handleCharts);
+        get("/charts/plot", this::handleChartPlot);
         get("/settings", this::handleSettings);
         get("/settings/configure-report-delivery", this::handleConfigureReportDelivery);
         post("/products/add", this::handleAddProduct);
@@ -161,6 +162,49 @@ public class Web implements Runnable {
             return temp.toString();
         }
         return baos.toString();
+    }
+
+    private Object handleCharts(Request req, Response res) {
+        Map<String, Object> model = Map.of(
+            "title", "Manage charts",
+            "chartTypes", ChartType.values(),
+            "reportTypes", Report.Type.values());
+        return render(model, "templates/charts.html.vm");
+    }
+
+    private Object handleChartPlot(Request req, Response res) throws WarehouseException {
+        Report.Type reportType;
+        ChartType chartType;
+        try {
+            reportType = Report.Type.valueOf(req.queryParams("reportType"));
+            chartType = ChartType.valueOf(req.queryParams("chartType"));
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Report and chart type must be specified.", ex);
+        }
+        Report report = warehouse.generateReport(reportType);
+
+        ChartPlotter plotter;
+        if (Main.FULL_VERSION) {
+            plotter = new ComplexChartPlotter(reportType, chartType);
+        } else {
+            plotter = new DummyChartPlotter();
+        }
+
+        String error = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            OutputStream out = Base64.getEncoder().wrap(baos);
+            plotter.plot(report, out);
+        } catch (IOException ex) {
+            error = ex.getMessage();
+            System.err.println(ex.getMessage());
+        }
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("title", String.format("%s %s chart", reportType.getDisplayName(), chartType));
+        model.put("error", error);
+        model.put("data", baos.toString());
+        return render(model, "templates/plot-report.html.vm");
     }
 
     private Object handleSettings(Request req, Response res) {
