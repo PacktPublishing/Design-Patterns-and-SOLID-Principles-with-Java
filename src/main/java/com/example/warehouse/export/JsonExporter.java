@@ -18,23 +18,20 @@ public class JsonExporter implements Exporter {
     @Override
     public void export() {
         out.println("[");
-        List<List<String>> records = report.getRecords();
+        List<List<Report.Field>> records = report.getRecords();
         for (int i = 0; i < records.size(); i++) {
             out.println("\t{");
-            List<String> record = records.get(i);
+            List<Report.Field> record = records.get(i);
             for (int j = 0; j < report.getLabels().size(); j++) {
                 String label = report.getLabels().get(j);
-                String field = record.get(j);
+                Report.Field field = record.get(j);
                 out.printf("\t\t\"%s\": ", label);
-                if (j == 0) {
-                    // string field
-                    out.printf("\"%s\"", field);
-                } else {
-                    // TODO: this is a hack, it is assumed that every JSON field will be a number field
-                    // expect the very first. This exporter needs type information to work correctly,
-                    // others don't and this piece of information is not available here.
+                if (field.getDataType() == Report.DataType.NUMBER) {
                     // number field
-                    out.printf("%s", field);
+                    out.printf("%s", field.getAsNumber());
+                } else {
+                    // date or string field
+                    out.printf("\"%s\"", field.getAsString());
                 }
                 if (j != report.getLabels().size() - 1) {
                     out.print(",");

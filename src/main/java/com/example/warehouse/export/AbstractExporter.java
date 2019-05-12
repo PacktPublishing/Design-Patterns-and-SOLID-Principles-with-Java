@@ -30,10 +30,10 @@ public abstract class AbstractExporter implements Exporter {
     protected List<Integer> calcWidths(Report report) {
         List<Integer> widths = new ArrayList<>();
         report.getLabels().forEach(l -> widths.add(l.length()));
-        for (List<String> record : report.getRecords()) {
+        for (List<Report.Field> record : report.getRecords()) {
             for (int i = 0; i < widths.size(); i++) {
                 int maxWidth = widths.get(i);
-                int width = record.get(i).length();
+                int width = record.get(i).getAsString().length();
                 if (width > maxWidth) {
                     widths.set(i, width);
                 }
@@ -54,19 +54,19 @@ public abstract class AbstractExporter implements Exporter {
     }
 
     private void handleRecords() {
-        List<List<String>> records = report.getRecords();
+        List<List<Report.Field>> records = report.getRecords();
         if (records.size() == 1) {
             handleRecord(out, records.get(0), true, true);
         } else if (records.size() >= 2) {
             handleRecord(out, records.get(0), true, false);
-            for (List<String> record : records.subList(1, records.size() - 1)) {
+            for (List<Report.Field> record : records.subList(1, records.size() - 1)) {
                 handleRecord(out, record, false, false);
             }
             handleRecord(out, records.get(records.size() - 1), false, true);
         }
     }
 
-    protected abstract void handleRecord(PrintStream out, List<String> record, boolean first, boolean last);
+    protected abstract void handleRecord(PrintStream out, List<Report.Field> record, boolean first, boolean last);
 
     protected void afterRecords(PrintStream out) {
     }

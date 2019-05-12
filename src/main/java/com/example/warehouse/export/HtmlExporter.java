@@ -37,10 +37,10 @@ public class HtmlExporter extends AbstractExporter {
     }
 
     @Override
-    protected void handleRecord(PrintStream out, List<String> record, boolean first, boolean last) {
+    protected void handleRecord(PrintStream out, List<Report.Field> record, boolean first, boolean last) {
         out.println("\t\t<tr>");
-        for (String field : record) {
-            out.printf("\t\t\t<td>%s</td>%n", field);
+        for (Report.Field field : record) {
+            out.printf("\t\t\t<td>%s</td>%n", field.getAsString());
         }
         out.println("\t\t</tr>");
     }

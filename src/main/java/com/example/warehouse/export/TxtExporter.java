@@ -44,8 +44,10 @@ public final class TxtExporter extends AbstractExporter {
     }
 
     @Override
-    protected void handleRecord(PrintStream out, List<String> record, boolean first, boolean last) {
-        printStrings(out, record);
+    protected void handleRecord(PrintStream out, List<Report.Field> record, boolean first, boolean last) {
+        printStrings(out, record.stream()
+            .map(Report.Field::getAsString)
+            .collect(Collectors.toList()));
     }
 
     @Override

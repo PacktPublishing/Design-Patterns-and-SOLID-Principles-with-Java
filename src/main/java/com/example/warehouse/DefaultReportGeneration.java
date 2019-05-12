@@ -2,7 +2,6 @@ package com.example.warehouse;
 
 import com.example.warehouse.dal.OrderDao;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -27,7 +26,9 @@ public class DefaultReportGeneration implements ReportGeneration {
             .filter(o -> !o.isPending())
             .sorted()
             .collect(groupingBy(Order::getDate, LinkedHashMap::new, summingInt(Order::getTotalPrice)))
-            .forEach((date, totalRevenue) -> report.addRecord(Arrays.asList(date, totalRevenue)));
+            .forEach((date, totalRevenue) -> report.addRecord(
+                new Report.Field(Report.DataType.DATE, date),
+                new Report.Field(Report.DataType.NUMBER, totalRevenue)));
         return report;
     }
 

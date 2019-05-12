@@ -2,7 +2,6 @@ package com.example.warehouse;
 
 import com.example.warehouse.dal.OrderDao;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,17 +28,17 @@ public class AlternativeReportGeneration implements ReportGeneration {
             .stream()
             .sorted()
             .collect(groupingBy(Order::getDate, LinkedHashMap::new, toList()))
-            .forEach((date, orders) -> report.addRecord(Arrays.asList(
-                date,
-                orders
+            .forEach((date, orders) -> report.addRecord(
+                new Report.Field(Report.DataType.DATE, date),
+                new Report.Field(Report.DataType.NUMBER, orders
                     .stream()
                     .sorted()
                     .map(Order::getQuantities)
                     .map(Map::values)
                     .flatMap(Collection::stream)
                     .mapToInt(Integer::intValue)
-                    .sum(),
-                orders
+                    .sum()),
+                new Report.Field(Report.DataType.NUMBER, orders
                     .stream()
                     .sorted()
                     .mapToInt(Order::getTotalPrice)
