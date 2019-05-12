@@ -14,3 +14,5 @@ Changes since _Section 4_, _Video 2_.
 classes respectively to demonstrate the possibilities of the Factory Method design pattern. 
 * Update `Main` to instantiate the "regular" or the trial instances of the aforementioned classes based
 on the value of the `FULL_VERSION` flag.
+
+**Note**: changed how the HtmlEscaperOutputStream class is used - after export, instead before export.
