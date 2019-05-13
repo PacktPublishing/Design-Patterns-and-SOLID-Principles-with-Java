@@ -1,6 +1,5 @@
 package com.example.cli;
 
-import com.example.Main;
 import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
@@ -9,9 +8,8 @@ import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.ExporterFactory;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 import com.example.warehouse.plot.ChartPlotter;
+import com.example.warehouse.plot.ChartPlotterFactory;
 import com.example.warehouse.plot.ChartType;
-import com.example.warehouse.plot.ComplexChartPlotter;
-import com.example.warehouse.plot.DummyChartPlotter;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -110,14 +108,21 @@ public class Cli implements Runnable {
 
     private final List<String> args;
     private final ExporterFactory exporterFactory;
+    private final ChartPlotterFactory plotterFactory;
     private final Warehouse warehouse;
     private final List<ReportDelivery> reportDeliveries;
 
     private ReportDelivery activeReportDelivery;
 
-    public Cli(List<String> args, ExporterFactory exporterFactory, Warehouse warehouse, List<ReportDelivery> reportDeliveries) {
+    public Cli(
+        List<String> args,
+        ExporterFactory exporterFactory,
+        ChartPlotterFactory plotterFactory,
+        Warehouse warehouse,
+        List<ReportDelivery> reportDeliveries) {
         this.args = args;
         this.exporterFactory = exporterFactory;
+        this.plotterFactory = plotterFactory;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
 
@@ -325,12 +330,7 @@ public class Cli implements Runnable {
         }
         chartType = ChartType.values()[exportMenuChoice - 1];
 
-        ChartPlotter plotter;
-        if (Main.FULL_VERSION) {
-            plotter = new ComplexChartPlotter(reportType, chartType);
-        } else {
-            plotter = new DummyChartPlotter();
-        }
+        ChartPlotter plotter = plotterFactory.newPlotter(reportType, chartType);
 
         try {
             File file = Files.createTempFile(null, ".png").toFile();

@@ -1,6 +1,5 @@
 package com.example.web;
 
-import com.example.Main;
 import com.example.warehouse.Report;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
@@ -10,9 +9,8 @@ import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.ExporterFactory;
 import com.example.warehouse.plot.ChartPlotter;
+import com.example.warehouse.plot.ChartPlotterFactory;
 import com.example.warehouse.plot.ChartType;
-import com.example.warehouse.plot.ComplexChartPlotter;
-import com.example.warehouse.plot.DummyChartPlotter;
 import com.example.web.util.HtmlEscaperOutputStream;
 import spark.ModelAndView;
 import spark.Request;
@@ -37,6 +35,7 @@ public class Web implements Runnable {
 
     private final List<String> args;
     private final ExporterFactory exporterFactory;
+    private final ChartPlotterFactory plotterFactory;
     private final Warehouse warehouse;
     private final List<ReportDelivery> reportDeliveries;
 
@@ -45,10 +44,12 @@ public class Web implements Runnable {
     public Web(
         List<String> args,
         ExporterFactory exporterFactory,
+        ChartPlotterFactory plotterFactory,
         Warehouse warehouse,
         List<ReportDelivery> reportDeliveries) {
         this.args = args;
         this.exporterFactory = exporterFactory;
+        this.plotterFactory = plotterFactory;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
 
@@ -183,12 +184,7 @@ public class Web implements Runnable {
         }
         Report report = warehouse.generateReport(reportType);
 
-        ChartPlotter plotter;
-        if (Main.FULL_VERSION) {
-            plotter = new ComplexChartPlotter(reportType, chartType);
-        } else {
-            plotter = new DummyChartPlotter();
-        }
+        ChartPlotter plotter = plotterFactory.newPlotter(reportType, chartType);
 
         String error = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
