@@ -1,5 +1,6 @@
 package com.example.web;
 
+import com.example.warehouse.DependencyFactory;
 import com.example.warehouse.Report;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
@@ -7,9 +8,7 @@ import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
 import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
-import com.example.warehouse.export.ExporterFactory;
 import com.example.warehouse.plot.ChartPlotter;
-import com.example.warehouse.plot.ChartPlotterFactory;
 import com.example.warehouse.plot.ChartType;
 import com.example.web.util.HtmlEscaperOutputStream;
 import spark.ModelAndView;
@@ -34,8 +33,7 @@ public class Web implements Runnable {
     }
 
     private final List<String> args;
-    private final ExporterFactory exporterFactory;
-    private final ChartPlotterFactory plotterFactory;
+    private final DependencyFactory dependencyFactory;
     private final Warehouse warehouse;
     private final List<ReportDelivery> reportDeliveries;
 
@@ -43,13 +41,11 @@ public class Web implements Runnable {
 
     public Web(
         List<String> args,
-        ExporterFactory exporterFactory,
-        ChartPlotterFactory plotterFactory,
+        DependencyFactory dependencyFactory,
         Warehouse warehouse,
         List<ReportDelivery> reportDeliveries) {
         this.args = args;
-        this.exporterFactory = exporterFactory;
-        this.plotterFactory = plotterFactory;
+        this.dependencyFactory = dependencyFactory;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
 
@@ -129,7 +125,7 @@ public class Web implements Runnable {
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Report report = warehouse.generateReport(reportType);
-        Exporter exporter = exporterFactory.newExporter(report, exportType, baos);
+        Exporter exporter = dependencyFactory.newExporter(report, exportType, baos);
         exporter.export();
 
         String error = null;
@@ -184,7 +180,7 @@ public class Web implements Runnable {
         }
         Report report = warehouse.generateReport(reportType);
 
-        ChartPlotter plotter = plotterFactory.newPlotter(reportType, chartType);
+        ChartPlotter plotter = dependencyFactory.newPlotter(reportType, chartType);
 
         String error = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

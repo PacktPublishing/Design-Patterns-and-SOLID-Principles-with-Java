@@ -5,10 +5,8 @@ import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
 import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
-import com.example.warehouse.export.ExporterFactory;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 import com.example.warehouse.plot.ChartPlotter;
-import com.example.warehouse.plot.ChartPlotterFactory;
 import com.example.warehouse.plot.ChartType;
 
 import java.io.*;
@@ -107,8 +105,7 @@ public class Cli implements Runnable {
     private final List<MenuOption> reportDeliveryOptions = new ArrayList<>();
 
     private final List<String> args;
-    private final ExporterFactory exporterFactory;
-    private final ChartPlotterFactory plotterFactory;
+    private final DependencyFactory dependencyFactory;
     private final Warehouse warehouse;
     private final List<ReportDelivery> reportDeliveries;
 
@@ -116,13 +113,11 @@ public class Cli implements Runnable {
 
     public Cli(
         List<String> args,
-        ExporterFactory exporterFactory,
-        ChartPlotterFactory plotterFactory,
+        DependencyFactory dependencyFactory,
         Warehouse warehouse,
         List<ReportDelivery> reportDeliveries) {
         this.args = args;
-        this.exporterFactory = exporterFactory;
-        this.plotterFactory = plotterFactory;
+        this.dependencyFactory = dependencyFactory;
         this.warehouse = warehouse;
         this.reportDeliveries = reportDeliveries;
 
@@ -330,7 +325,7 @@ public class Cli implements Runnable {
         }
         chartType = ChartType.values()[exportMenuChoice - 1];
 
-        ChartPlotter plotter = plotterFactory.newPlotter(reportType, chartType);
+        ChartPlotter plotter = dependencyFactory.newPlotter(reportType, chartType);
 
         try {
             File file = Files.createTempFile(null, ".png").toFile();
@@ -344,7 +339,7 @@ public class Cli implements Runnable {
     }
 
     private void doReportExport(Report report, ExportType type, PrintStream out) {
-        Exporter exporter = exporterFactory.newExporter(report, type, out);
+        Exporter exporter = dependencyFactory.newExporter(report, type, out);
         exporter.export();
     }
 

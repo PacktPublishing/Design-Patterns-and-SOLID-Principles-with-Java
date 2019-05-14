@@ -1,18 +1,11 @@
 package com.example;
 
 import com.example.cli.Cli;
-import com.example.warehouse.Warehouse;
-import com.example.warehouse.Warehouses;
+import com.example.warehouse.*;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
-import com.example.warehouse.export.ExporterFactory;
-import com.example.warehouse.export.FullExporterFactory;
-import com.example.warehouse.export.TrialExporterFactory;
-import com.example.warehouse.plot.ChartPlotterFactory;
-import com.example.warehouse.plot.FullChartPlotterFactory;
-import com.example.warehouse.plot.TrialChartPlotterFactory;
 import com.example.web.Web;
 
 import javax.mail.internet.AddressException;
@@ -41,17 +34,11 @@ public class Main {
             return;
         }
 
-        ExporterFactory exporterFactory;
-        ChartPlotterFactory plotterFactory;
-        if (FULL_VERSION) {
-            exporterFactory = new FullExporterFactory();
-            plotterFactory = new FullChartPlotterFactory();
-        } else {
-            exporterFactory = new TrialExporterFactory();
-            plotterFactory = new TrialChartPlotterFactory();
-        }
-        new Web(arguments, exporterFactory, plotterFactory, warehouse, reportDeliveries).run();
-        new Cli(arguments, exporterFactory, plotterFactory, warehouse, reportDeliveries).run();
+        DependencyFactory dependencyFactory = FULL_VERSION
+            ? new FullDependencyFactory()
+            : new TrialDependencyFactory();
+        new Web(arguments, dependencyFactory, warehouse, reportDeliveries).run();
+        new Cli(arguments, dependencyFactory, warehouse, reportDeliveries).run();
 
         // INFO: Needed because when Cli exists the Web
         // interface's thread will keep the app hanging.
