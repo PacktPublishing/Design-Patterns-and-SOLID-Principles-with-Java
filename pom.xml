@@ -4,7 +4,7 @@
     <groupId>com.example</groupId>
     <artifactId>demo</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,50 +13,53 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
-    <dependencies>
-        <!-- INFO: Spark used to provide the web interface. -->
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-core</artifactId>
-            <version>2.7.2</version>
-        </dependency>
-        <!-- INFO: Spark's Velocity dependency is used to create dynamic HTML templates. -->
-        <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-template-velocity</artifactId>
-            <version>2.7.1</version>
-        </dependency>
-        <!-- INFO: used to implement delivering exported reports in email. -->
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <!-- INFO: used to store data in an in-memory database as an alternative to storing data in Java objects. -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.199</version>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- INFO: SLF4J's simple implementation is used to configure Spark's logging. -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.26</version>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- INFO: used to draw charts of reports. -->
-        <dependency>
-            <groupId>org.jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.4.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>demo-app</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- INFO: Spark used to provide the web interface. -->
+            <dependency>
+                <groupId>com.sparkjava</groupId>
+                <artifactId>spark-core</artifactId>
+                <version>2.7.2</version>
+            </dependency>
+            <!-- INFO: Spark's Velocity dependency is used to create dynamic HTML templates. -->
+            <dependency>
+                <groupId>com.sparkjava</groupId>
+                <artifactId>spark-template-velocity</artifactId>
+                <version>2.7.1</version>
+            </dependency>
+            <!-- INFO: used to implement delivering exported reports in email. -->
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>1.6.2</version>
+            </dependency>
+            <!-- INFO: used to store data in an in-memory database as an alternative to storing data in Java objects. -->
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.199</version>
+            </dependency>
+            <!-- INFO: SLF4J's simple implementation is used to configure Spark's logging. -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>1.7.26</version>
+            </dependency>
+            <!-- INFO: used to draw charts of reports. -->
+            <dependency>
+                <groupId>org.jfree</groupId>
+                <artifactId>jfreechart</artifactId>
+                <version>1.5.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>5.4.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
