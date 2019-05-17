@@ -14,12 +14,18 @@
     </properties>
 
     <modules>
+        <module>demo-core</module>
         <module>demo-app</module>
         <module>demo-app-full</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>demo-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>com.example</groupId>
                 <artifactId>demo-app</artifactId>
