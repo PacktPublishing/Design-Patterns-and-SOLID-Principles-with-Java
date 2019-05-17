@@ -12,7 +12,11 @@
     <dependencies>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>demo-app</artifactId>
+            <artifactId>demo-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
