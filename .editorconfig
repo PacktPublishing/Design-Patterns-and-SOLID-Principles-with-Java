@@ -6,6 +6,6 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
-[*.{java,xml}]
+[*.{java, xml, md}]
 indent_style = space
 indent_size = 4
