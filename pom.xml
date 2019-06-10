@@ -84,6 +84,12 @@
                 <artifactId>unirest-java</artifactId>
                 <version>1.4.9</version>
             </dependency>
+            <!-- INFO: used for JSON parsing. -->
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20180813</version>
+            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
