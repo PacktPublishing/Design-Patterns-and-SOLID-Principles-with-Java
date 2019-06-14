@@ -17,6 +17,7 @@
         <module>demo-core</module>
         <module>demo-app</module>
         <module>demo-app-full</module>
+        <module>demo-tool</module>
     </modules>
 
     <dependencyManagement>
@@ -34,6 +35,11 @@
             <dependency>
                 <groupId>com.example</groupId>
                 <artifactId>demo-app-full</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>demo-tool</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <!-- INFO: Spark used to provide the web interface. -->
@@ -71,6 +77,12 @@
                 <groupId>org.jfree</groupId>
                 <artifactId>jfreechart</artifactId>
                 <version>1.5.0</version>
+            </dependency>
+            <!-- INFO: use to make REST API calls. -->
+            <dependency>
+                <groupId>com.mashape.unirest</groupId>
+                <artifactId>unirest-java</artifactId>
+                <version>1.4.9</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
