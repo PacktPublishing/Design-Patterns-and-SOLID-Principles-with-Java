@@ -1,6 +1,7 @@
 package com.example.warehouse;
 
 import com.example.warehouse.dal.*;
+import com.example.warehouse.service.ExternalCustomerService;
 
 public final class Warehouses {
 
@@ -12,7 +13,15 @@ public final class Warehouses {
 
         ReportGeneration reportGeneration = createReportGeneration(clientId, orderDao);
 
-        return new Warehouse(productDao, customerDao, inventoryDao, orderDao, reportGeneration);
+        ExternalCustomerService externalCustomerService = new ExternalCustomerService();
+
+        return new Warehouse(
+            productDao,
+            customerDao,
+            inventoryDao,
+            orderDao,
+            reportGeneration,
+            externalCustomerService);
     }
 
     public static Warehouse newDbWarehouse(int clientId) {
@@ -23,7 +32,15 @@ public final class Warehouses {
 
         ReportGeneration reportGeneration = createReportGeneration(clientId, orderDao);
 
-        return new Warehouse(productDao, customerDao, inventoryDao, orderDao, reportGeneration);
+        ExternalCustomerService externalCustomerService = new ExternalCustomerService();
+
+        return new Warehouse(
+            productDao,
+            customerDao,
+            inventoryDao,
+            orderDao,
+            reportGeneration,
+            externalCustomerService);
     }
 
     private static ReportGeneration createReportGeneration(int clientId, OrderDao orderDao) {

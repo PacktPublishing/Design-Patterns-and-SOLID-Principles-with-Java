@@ -4,25 +4,18 @@ import com.example.warehouse.dal.CustomerDao;
 import com.example.warehouse.dal.InventoryDao;
 import com.example.warehouse.dal.OrderDao;
 import com.example.warehouse.dal.ProductDao;
-import org.json.JSONArray;
+import com.example.warehouse.service.ExternalCustomerService;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
 public final class Warehouse {
-
-    private static final String EXTERNAL_CUSTOMERS_URL = System.getProperty("EXTERNAL_CUSTOMERS_URL", "http://localhost:3000/customers");
 
     private final ProductDao productDao;
     private final CustomerDao customerDao;
@@ -30,18 +23,21 @@ public final class Warehouse {
     private final OrderDao orderDao;
 
     private final ReportGeneration reportGeneration;
+    private final ExternalCustomerService externalCustomerService;
 
     public Warehouse(
         ProductDao productDao,
         CustomerDao customerDao,
         InventoryDao inventoryDao,
         OrderDao orderDao,
-        ReportGeneration reportGeneration) {
+        ReportGeneration reportGeneration,
+        ExternalCustomerService externalCustomerService) {
         this.productDao = productDao;
         this.customerDao = customerDao;
         this.inventoryDao = inventoryDao;
         this.orderDao = orderDao;
         this.reportGeneration = reportGeneration;
+        this.externalCustomerService = externalCustomerService;
     }
 
     public Collection<Product> getProducts() throws WarehouseException {
@@ -52,7 +48,7 @@ public final class Warehouse {
     }
 
     public Collection<Customer> getCustomers() throws WarehouseException {
-        Map<Integer, JSONObject> externalCustomers = fetchExternalCustomers();
+        Map<Integer, JSONObject> externalCustomers = externalCustomerService.fetchCustomers();
         return customerDao.getCustomers()
             .stream()
             .map(c -> {
@@ -71,26 +67,6 @@ public final class Warehouse {
             })
             .sorted(Comparator.comparing(Customer::getId))
             .collect(toUnmodifiableList());
-    }
-
-    private Map<Integer, JSONObject> fetchExternalCustomers() throws WarehouseException {
-        Map<Integer, JSONObject> results = new HashMap<>();
-        try {
-            URL url = new URL(EXTERNAL_CUSTOMERS_URL);
-            URLConnection connection = url.openConnection();
-            connection.setConnectTimeout(1000);
-            connection.setReadTimeout(500);
-            try (InputStream is = connection.getInputStream()) {
-                JSONArray customers = new JSONArray(new String(is.readAllBytes()));
-                for (int i = 0; i < customers.length(); i++) {
-                    JSONObject customer = customers.getJSONObject(i);
-                    results.put(customer.getInt("id"), customer);
-                }
-            }
-        } catch (IOException ex) {
-            throw new WarehouseException(format("Problem while fetching additional customer data: %s", ex.getMessage()), ex);
-        }
-        return results;
     }
 
     public Collection<Order> getOrders() throws WarehouseException {
