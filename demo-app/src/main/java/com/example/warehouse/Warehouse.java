@@ -78,8 +78,8 @@ public final class Warehouse {
         try {
             URL url = new URL(EXTERNAL_CUSTOMERS_URL);
             URLConnection connection = url.openConnection();
-            connection.setConnectTimeout(50);
-            connection.setReadTimeout(50);
+            connection.setConnectTimeout(1000);
+            connection.setReadTimeout(500);
             try (InputStream is = connection.getInputStream()) {
                 JSONArray customers = new JSONArray(new String(is.readAllBytes()));
                 for (int i = 0; i < customers.length(); i++) {
