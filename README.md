@@ -4,10 +4,10 @@
 
 Video course companion code.
 
-## Section 5, Video 3
+## Section 5, Video 4
 
-Changes since _Section 5_, Video 2.
+Changes since _Section 5_, Video 3.
 
-* Add `demo-tool` submodule.
-* Update `Customer` class with new fields.
-* Add `db.json` to simulate, with the use of `json-server`, an external 3rd party REST API.
+* Add `org.json` as dependency to parent POM.
+* Update `Cli` and `Web` to use the new `Customer` fields.
+* Create `ExternalCustomerService` interface and an implementation that fetches external customer data from a 3rd party API. 
