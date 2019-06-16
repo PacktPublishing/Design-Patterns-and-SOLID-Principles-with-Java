@@ -4,6 +4,10 @@
 
 Video course companion code.
 
-## Section 5, Video 2
+## Section 5, Video 3
 
-Nothing has changed since _Section 5_, Video 1.
+Changes since _Section 5_, Video 2.
+
+* Add `demo-tool` submodule.
+* Update `Customer` class with new fields.
+* Add `db.json` to simulate, with the use of `json-server`, an external 3rd party REST API.
