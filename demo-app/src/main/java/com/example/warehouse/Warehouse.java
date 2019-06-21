@@ -4,10 +4,7 @@ import com.example.warehouse.dal.CustomerDao;
 import com.example.warehouse.dal.InventoryDao;
 import com.example.warehouse.dal.OrderDao;
 import com.example.warehouse.dal.ProductDao;
-import com.example.warehouse.service.ExternalCustomerService;
-import org.json.JSONObject;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,21 +20,18 @@ public final class Warehouse {
     private final OrderDao orderDao;
 
     private final ReportGeneration reportGeneration;
-    private final ExternalCustomerService externalCustomerService;
 
     public Warehouse(
         ProductDao productDao,
         CustomerDao customerDao,
         InventoryDao inventoryDao,
         OrderDao orderDao,
-        ReportGeneration reportGeneration,
-        ExternalCustomerService externalCustomerService) {
+        ReportGeneration reportGeneration) {
         this.productDao = productDao;
         this.customerDao = customerDao;
         this.inventoryDao = inventoryDao;
         this.orderDao = orderDao;
         this.reportGeneration = reportGeneration;
-        this.externalCustomerService = externalCustomerService;
     }
 
     public Collection<Product> getProducts() throws WarehouseException {
@@ -48,23 +42,9 @@ public final class Warehouse {
     }
 
     public Collection<Customer> getCustomers() throws WarehouseException {
-        Map<Integer, JSONObject> externalCustomers = externalCustomerService.fetchCustomers();
         return customerDao.getCustomers()
             .stream()
-            .map(c -> {
-                JSONObject customer = externalCustomers.get(c.getId());
-                JSONObject address = customer.getJSONObject("address");
-                return new Customer(
-                    c.getId(),
-                    c.getName(),
-                    LocalDate.parse(customer.getString("date_of_birth")),
-                    customer.getString("company"),
-                    customer.getString("phone"),
-                    address.getString("street_address"),
-                    address.getString("city"),
-                    address.getString("state"),
-                    address.getInt("zip_code"));
-            })
+
             .sorted(Comparator.comparing(Customer::getId))
             .collect(toUnmodifiableList());
     }
