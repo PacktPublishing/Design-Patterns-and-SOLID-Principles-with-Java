@@ -20,18 +20,16 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
         LocalDate orderDate;
         boolean pending;
         int customerId;
-        String customerName;
         int productId;
         String productName;
         int price;
         int quantity;
 
-        OrderRecord(int orderId, LocalDate orderDate, boolean pending, int customerId, String customerName, int productId, String productName, int price, int quantity) {
+        OrderRecord(int orderId, LocalDate orderDate, boolean pending, int customerId, int productId, String productName, int price, int quantity) {
             this.orderId = orderId;
             this.orderDate = orderDate;
             this.pending = pending;
             this.customerId = customerId;
-            this.customerName = customerName;
             this.productId = productId;
             this.productName = productName;
             this.price = price;
@@ -54,10 +52,6 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
             return customerId;
         }
 
-        String getCustomerName() {
-            return customerName;
-        }
-
         int getProductId() {
             return productId;
         }
@@ -75,7 +69,10 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
         }
     }
 
-    public DbOrderDao() {
+    private final CustomerDao customerDao;
+
+    public DbOrderDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
     }
 
     @Override
@@ -89,7 +86,6 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
                     + "o.order_date, "
                     + "o.pending, "
                     + "c.id AS customer_id, "
-                    + "c.name AS customer_name, "
                     + "p.id AS product_id, "
                     + "p.name AS product_name, "
                     + "p.price, "
@@ -97,7 +93,6 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
                     "FROM orders AS o " +
                     "JOIN order_details AS od ON o.id = od.order_id " +
                     "JOIN products AS p ON p.id = od.product_id " +
-                    "JOIN customers AS c ON c.id = o.customer_id " +
                     "GROUP BY o.id, p.id")) {
                 while (rs.next()) {
                     results.add(new OrderRecord(
@@ -105,7 +100,6 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
                         rs.getDate("order_date").toLocalDate(),
                         rs.getBoolean("pending"),
                         rs.getInt("customer_id"),
-                        rs.getString("customer_name"),
                         rs.getInt("product_id"),
                         rs.getString("product_name"),
                         rs.getInt("price"),
@@ -123,9 +117,10 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
                             or -> new Product(or.productId, or.productName, or.price),
                             Collectors.summingInt(OrderRecord::getQuantity)));
 
+                    String customerName = customerDao.getCustomer(firstRecord.customerId).getName();
                     orders.add(new Order(
                         orderId,
-                        new Customer(firstRecord.customerId, firstRecord.customerName),
+                        new Customer(firstRecord.customerId, customerName),
                         firstRecord.orderDate,
                         quantities,
                         firstRecord.pending));

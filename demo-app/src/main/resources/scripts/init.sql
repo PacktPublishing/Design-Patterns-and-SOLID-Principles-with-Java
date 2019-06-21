@@ -1,8 +1,3 @@
-CREATE TABLE customers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name TEXT
-);
-
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name TEXT,
@@ -19,8 +14,7 @@ CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
     order_date DATE NOT NULL,
-    pending INT NOT NULL CHECK (pending = 0 OR pending = 1),
-    FOREIGN KEY (customer_id) REFERENCES customers(id)
+    pending INT NOT NULL CHECK (pending = 0 OR pending = 1)
 );
 
 CREATE TABLE order_details (
@@ -30,14 +24,6 @@ CREATE TABLE order_details (
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
-
-INSERT INTO customers VALUES (12, 'John Smith');
-INSERT INTO customers VALUES (33, 'Franklin Alder');
-INSERT INTO customers VALUES (37, 'Lynda Sheldon');
-INSERT INTO customers VALUES (41, 'Logan Michael');
-INSERT INTO customers VALUES (67, 'Lorena Clyde');
-INSERT INTO customers VALUES (88, 'Peter Styles');
-INSERT INTO customers VALUES (102, 'Rupert Gordon');
 
 INSERT INTO products VALUES (2, 'computer', 1234);
 INSERT INTO products VALUES (4, 'sun glasses', 12);

@@ -22,9 +22,9 @@ public final class Warehouses {
 
     public static Warehouse newDbWarehouse(int clientId) {
         ProductDao productDao = new DbProductDao();
-        CustomerDao customerDao = new DbCustomerDao();
+        CustomerDao customerDao = null;
         InventoryDao inventoryDao = new DbInventoryDao();
-        OrderDao orderDao = new DbOrderDao();
+        OrderDao orderDao = new DbOrderDao(customerDao);
 
         ReportGeneration reportGeneration = createReportGeneration(clientId, orderDao);
 
