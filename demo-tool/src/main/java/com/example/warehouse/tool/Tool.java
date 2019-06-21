@@ -3,6 +3,7 @@ package com.example.warehouse.tool;
 import com.example.warehouse.Customer;
 import com.example.warehouse.WarehouseException;
 import com.example.warehouse.dal.CustomerDao;
+import com.example.warehouse.dal.RestCustomerDao;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -18,7 +19,7 @@ public class Tool {
     public static void main(String[] args) {
         Map<Customer, JSONArray> allTodos = new HashMap<>();
         try {
-            CustomerDao dao = null;
+            CustomerDao dao = new RestCustomerDao();
             Collection<Customer> customers = dao.getCustomers();
             for (Customer customer : customers) {
                 JsonNode body = Unirest.get("http://localhost:3000/todos")

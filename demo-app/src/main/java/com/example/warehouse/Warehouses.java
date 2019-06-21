@@ -22,7 +22,7 @@ public final class Warehouses {
 
     public static Warehouse newDbWarehouse(int clientId) {
         ProductDao productDao = new DbProductDao();
-        CustomerDao customerDao = null;
+        CustomerDao customerDao = new RestCustomerDao();
         InventoryDao inventoryDao = new DbInventoryDao();
         OrderDao orderDao = new DbOrderDao(customerDao);
 
