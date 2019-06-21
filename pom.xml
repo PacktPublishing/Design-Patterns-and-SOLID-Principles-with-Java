@@ -18,6 +18,7 @@
         <module>demo-app</module>
         <module>demo-app-full</module>
         <module>demo-tool</module>
+        <module>demo-rest</module>
     </modules>
 
     <dependencyManagement>
