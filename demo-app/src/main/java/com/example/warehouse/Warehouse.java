@@ -51,7 +51,6 @@ public final class Warehouse {
     public Collection<Order> getOrders() throws WarehouseException {
         return orderDao.getOrders()
             .stream()
-            .sorted()
             .sorted(Comparator.comparing(Order::getId))
             .collect(toUnmodifiableList());
     }
