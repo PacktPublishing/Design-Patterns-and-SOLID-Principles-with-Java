@@ -4,10 +4,15 @@
 
 Video course companion code.
 
-## Section 5, Video 4
+## Section 5, Video 5
 
-Changes since _Section 5_, Video 3.
+Changes since _Section 5_, Video 4.
 
-* Add `org.json` as dependency to parent POM.
-* Update `Cli` and `Web` to use the new `Customer` fields.
-* Create `ExternalCustomerService` interface and an implementation that fetches external customer data from a 3rd party API. 
+* Remove `ExternalCustomerService` and related classes.
+* Add new submodule `demo-rest`.
+* Split database (and `init.sql` scripts) in order to separate customer related info from other data.  
+* Move `DbCustomerDao` implementation to `demo-rest`.
+* Create `Rest` class that acts as Microservice Facade between the main application and between different subsystems
+providing customer data the app needs.
+* Create `RestCustomerDao`, a new `CustomerDao` implementation that fetches customer data via HTTP calls to sent to the
+Microservice Facade. 
