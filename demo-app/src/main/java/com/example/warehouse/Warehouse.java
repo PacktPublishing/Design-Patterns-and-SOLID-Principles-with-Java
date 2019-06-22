@@ -44,7 +44,6 @@ public final class Warehouse {
     public Collection<Customer> getCustomers() throws WarehouseException {
         return customerDao.getCustomers()
             .stream()
-
             .sorted(Comparator.comparing(Customer::getId))
             .collect(toUnmodifiableList());
     }
