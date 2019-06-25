@@ -1,2 +1,2 @@
-# Design-Patterns-with-Java
-Design Patterns with Java, Published by Packt
+# Design-Patterns-and-SOLID-Priciples-with-Java
+Design Patterns and SOLID Principles with Java, Published by Packt
