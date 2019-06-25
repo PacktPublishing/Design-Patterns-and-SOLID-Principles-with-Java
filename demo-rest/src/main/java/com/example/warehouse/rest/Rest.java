@@ -56,7 +56,7 @@ public class Rest {
         }, GSON::toJson);
 
         get("/customers/:id", (req, res) -> {
-            int id = req.queryMap("id").integerValue();
+            int id = Integer.valueOf(req.params(":id"));
             return mergeWithExternalCustomer(dao.getCustomer(id), fetchCustomer(id));
         }, GSON::toJson);
     }
