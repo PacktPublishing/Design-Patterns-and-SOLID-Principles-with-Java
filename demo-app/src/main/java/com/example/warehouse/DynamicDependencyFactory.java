@@ -1,6 +1,5 @@
 package com.example.warehouse;
 
-import com.example.Main;
 import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
 import com.example.warehouse.plot.ChartPlotter;
@@ -17,7 +16,7 @@ public class DynamicDependencyFactory implements DependencyFactory {
     private final DependencyFactory dependencyFactory;
 
     public DynamicDependencyFactory() {
-        try (InputStream is = Main.class.getResourceAsStream(RESOURCE_NAME)) {
+        try (InputStream is = getClass().getResourceAsStream(RESOURCE_NAME)) {
             if (is == null) {
                 dependencyFactory = new TrialDependencyFactory();
             } else {

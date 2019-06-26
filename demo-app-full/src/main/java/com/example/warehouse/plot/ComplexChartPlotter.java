@@ -15,9 +15,9 @@ import static org.jfree.chart.ChartFactory.createTimeSeriesChart;
 import static org.jfree.chart.ChartFactory.createXYBarChart;
 import static org.jfree.chart.ChartUtils.writeChartAsPNG;
 
-public final class ComplexChartPlotter extends AbstractChartPlotter implements ChartPlotter {
+final class ComplexChartPlotter extends AbstractChartPlotter implements ChartPlotter {
 
-    public ComplexChartPlotter(Report.Type reportType, ChartType chartType) {
+    ComplexChartPlotter(Report.Type reportType, ChartType chartType) {
         super(reportType, chartType);
     }
 

@@ -12,7 +12,7 @@ public final class CsvExporter extends AbstractExporter {
 
     private final boolean includeHeader;
 
-    public CsvExporter(Report report, PrintStream out, boolean includeHeader) {
+    CsvExporter(Report report, PrintStream out, boolean includeHeader) {
         super(report, out);
         this.includeHeader = includeHeader;
     }

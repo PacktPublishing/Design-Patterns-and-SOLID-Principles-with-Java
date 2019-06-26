@@ -10,7 +10,7 @@ public class JsonExporter implements Exporter {
     private final Report report;
     private final PrintStream out;
 
-    public JsonExporter(Report report, PrintStream out) {
+    JsonExporter(Report report, PrintStream out) {
         this.report = report;
         this.out = out;
     }
