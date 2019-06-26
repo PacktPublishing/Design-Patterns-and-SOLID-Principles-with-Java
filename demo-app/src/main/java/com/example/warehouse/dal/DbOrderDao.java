@@ -85,7 +85,7 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
                     + "o.id AS order_id, "
                     + "o.order_date, "
                     + "o.pending, "
-                    + "c.id AS customer_id, "
+                    + "o.customer_id AS customer_id, "
                     + "p.id AS product_id, "
                     + "p.name AS product_name, "
                     + "p.price, "
