@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>demo-app</artifactId>
+            <artifactId>demo-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.mashape.unirest</groupId>
