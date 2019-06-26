@@ -1,80 +1,78 @@
 package com.example;
 
-import com.example.cli.Cli;
 import com.example.warehouse.DependencyFactory;
+import com.example.warehouse.DynamicDependencyFactory;
 import com.example.warehouse.Warehouse;
 import com.example.warehouse.Warehouses;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
-import com.example.web.Web;
 
 import javax.mail.internet.AddressException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class App implements Runnable {
+import static java.lang.System.*;
 
-    private final List<String> arguments;
-    private final DependencyFactory dependencyFactory;
+public abstract class App implements Runnable {
 
-    public App(List<String> arguments, DependencyFactory dependencyFactory) {
-        this.arguments = arguments;
-        this.dependencyFactory = dependencyFactory;
-    }
+    private static final String DESTINATION_ADDRESS = getenv()
+        .getOrDefault("DESTINATION_ADDRESS", "destination@demo.com");
 
-    @Override
-    public void run() {
-        checkClientId(arguments);
-        int clientId = parseClientId(arguments.get(0));
+    private static final String DESTINATION_DIRECTORY = getenv()
+        .getOrDefault("DESTINATION_DIRECTORY", ".");
 
-        Warehouse warehouse = Warehouses.newDbWarehouse(clientId);
+    protected final DependencyFactory dependencyFactory;
 
-        List<ReportDelivery> reportDeliveries;
+    protected Warehouse warehouse;
+    protected List<ReportDelivery> reportDeliveries;
+    protected ReportDelivery activeReportDelivery;
+
+    private final int clientId;
+
+    protected App() {
+        this.clientId = getClientId();
+        this.dependencyFactory = new DynamicDependencyFactory();
+
+        warehouse = Warehouses.newDbWarehouse(clientId);
+
         try {
             reportDeliveries = createReportDeliveries(clientId);
         } catch (AddressException ex) {
-            System.err.println("Wrong email address:" + ex.getMessage());
-            System.exit(1);
+            err.println("Wrong email address:" + ex.getMessage());
+            exit(1);
             return;
         }
 
-        new Web(arguments, dependencyFactory, warehouse, reportDeliveries).run();
-        new Cli(arguments, dependencyFactory, warehouse, reportDeliveries).run();
-
-        // INFO: Needed because when Cli exists the Web
-        // interface's thread will keep the app hanging.
-        System.exit(0);
+        activeReportDelivery = reportDeliveries.get(0);
     }
 
     private static List<ReportDelivery> createReportDeliveries(int clientId) throws AddressException {
         List<ReportDelivery> result = new ArrayList<>();
         result.add(new NoReportDelivery());
         if (clientId == 1) {
-            result.add(new EmailReportDelivery("destination@demo.com"));
-            result.add(new DirectoryReportDelivery("."));
+            result.add(new EmailReportDelivery(DESTINATION_ADDRESS));
+            result.add(new DirectoryReportDelivery(DESTINATION_DIRECTORY));
         } else {
-            result.add(new DirectoryReportDelivery("."));
+            result.add(new DirectoryReportDelivery(DESTINATION_DIRECTORY));
         }
         return result;
     }
 
-    private static void checkClientId(List<String> arguments) {
-        if (arguments.size() < 1) {
-            System.err.println("The client ID must be specified.");
-            System.exit(1);
+    private static int getClientId() {
+        String value = getenv("CLIENT_ID");
+        if (value == null || value.isBlank()) {
+            throw newIllegalClientId(value);
+        }
+        try {
+            return Integer.valueOf(value);
+        } catch (NumberFormatException ex) {
+            throw newIllegalClientId(value);
         }
     }
 
-    private static int parseClientId(String str) {
-        try {
-            return Integer.valueOf(str);
-        } catch (NumberFormatException ex) {
-            System.err.println(String.format("Illegal client ID: %s. It must be an integer", str));
-            System.exit(1);
-            // INFO: never returns 0 because of the call to System.exit.
-            return 0;
-        }
+    private static IllegalStateException newIllegalClientId(String value) {
+        return new IllegalStateException(String.format("Illegal client ID: %s. It must be an integer.", value));
     }
 }

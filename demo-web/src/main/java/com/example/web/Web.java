@@ -1,10 +1,9 @@
 package com.example.web;
 
-import com.example.warehouse.DependencyFactory;
+import com.example.App;
 import com.example.warehouse.Report;
-import com.example.warehouse.Warehouse;
+import com.example.warehouse.Util;
 import com.example.warehouse.WarehouseException;
-import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
 import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
@@ -14,6 +13,7 @@ import com.example.web.util.HtmlEscaperOutputStream;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.servlet.SparkApplication;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import java.io.*;
@@ -22,9 +22,7 @@ import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
-public class Web implements Runnable {
-
-    private static final int PORT = 8080;
+public final class Web extends App implements Runnable, SparkApplication {
 
     private static final VelocityTemplateEngine VELOCITY_TEMPLATE_ENGINE = new VelocityTemplateEngine();
 
@@ -32,28 +30,14 @@ public class Web implements Runnable {
         return VELOCITY_TEMPLATE_ENGINE.render(new ModelAndView(new HashMap<>(model), templatePath));
     }
 
-    private final List<String> args;
-    private final DependencyFactory dependencyFactory;
-    private final Warehouse warehouse;
-    private final List<ReportDelivery> reportDeliveries;
-
-    private ReportDelivery activeReportDelivery;
-
-    public Web(
-        List<String> args,
-        DependencyFactory dependencyFactory,
-        Warehouse warehouse,
-        List<ReportDelivery> reportDeliveries) {
-        this.args = args;
-        this.dependencyFactory = dependencyFactory;
-        this.warehouse = warehouse;
-        this.reportDeliveries = reportDeliveries;
-
-        activeReportDelivery = reportDeliveries.get(0);
+    @Override
+    public void run() {
+        port(Util.getPort());
+        init();
     }
 
-    public void run() {
-        port(PORT);
+    @Override
+    public void init() {
         exception(Exception.class, this::handleError);
         get("/", this::handleRoot);
         get("/products", this::handleProducts);
@@ -69,6 +53,10 @@ public class Web implements Runnable {
         post("/customers/add", this::handleAddCustomer);
         post("/orders/add", this::handleAddOrder);
         post("/settings/configure-report-delivery/:choice", this::handleConfigureReportDelivery);
+    }
+
+    @Override
+    public void destroy() {
     }
 
     private <T extends Exception> void handleError(T t, Request req, Response res) {

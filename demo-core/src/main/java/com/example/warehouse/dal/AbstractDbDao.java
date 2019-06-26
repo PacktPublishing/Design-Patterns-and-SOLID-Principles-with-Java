@@ -6,25 +6,19 @@ import java.sql.SQLException;
 
 abstract class AbstractDbDao {
 
-    private static final String DEFAULT_JDBC_URL = "jdbc:h2:mem:warehouse;DB_CLOSE_DELAY=-1";
-
-    // INFO: on first connection the in-memory DB will be initialized by init.sql located on the classpath.
-    private static final String INIT_JDBC_URL = "jdbc:h2:mem:warehouse;INIT=RUNSCRIPT FROM 'classpath:scripts/init.sql';DB_CLOSE_DELAY=-1";
-
-    static {
-        try (Connection connection = getConnection(INIT_JDBC_URL)) {
-            // INFO: needed because the in-memory database gets populated on the first connection.
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new IllegalStateException("This shouldn't happen.", ex);
-        }
-    }
-
     static Connection getConnection() throws SQLException {
-        return getConnection(DEFAULT_JDBC_URL);
-    }
-
-    private static Connection getConnection(String jdbcUrl) throws SQLException {
-        return DriverManager.getConnection(jdbcUrl);
+        String url = System.getenv("JDBC_URL");
+        String user = System.getenv("JDBC_USER");
+        String password = System.getenv("JDBC_PASSWORD");
+        String driver = System.getenv("JDBC_DRIVER");
+        try {
+            // INFO: when deployed as a WAR to a servlet container like Tomcat
+            // JDBC driver classes aren't loaded automatically when the driver's
+            // JAR is inside the WAR.
+            Class.forName(driver);
+        } catch (Throwable ex) {
+            throw new SQLException("Must specify the JDBC driver class to use.", ex);
+        }
+        return DriverManager.getConnection(url, user, password);
     }
 }

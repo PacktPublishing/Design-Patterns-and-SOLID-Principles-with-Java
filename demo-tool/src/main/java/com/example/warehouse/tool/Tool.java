@@ -14,7 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.lang.System.getenv;
+
 public class Tool {
+
+    private static final String EXTERNAL_TODOS_URL = getenv()
+        .getOrDefault("EXTERNAL_TODOS_URL", "http://localhost:3000/todos");
 
     public static void main(String[] args) {
         Map<Customer, JSONArray> allTodos = new HashMap<>();
@@ -22,7 +27,7 @@ public class Tool {
             CustomerDao dao = new RestCustomerDao();
             Collection<Customer> customers = dao.getCustomers();
             for (Customer customer : customers) {
-                JsonNode body = Unirest.get("http://localhost:3000/todos")
+                JsonNode body = Unirest.get(EXTERNAL_TODOS_URL)
                     .queryString("userId", customer.getId())
                     .asJson()
                     .getBody();

@@ -1,5 +1,6 @@
 package com.example.cli;
 
+import com.example.App;
 import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDelivery;
 import com.example.warehouse.delivery.ReportDeliveryException;
@@ -14,7 +15,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public class Cli implements Runnable {
+public final class Cli extends App implements Runnable {
 
     static final class MenuOption {
 
@@ -104,25 +105,8 @@ public class Cli implements Runnable {
 
     private final List<MenuOption> reportDeliveryOptions = new ArrayList<>();
 
-    private final List<String> args;
-    private final DependencyFactory dependencyFactory;
-    private final Warehouse warehouse;
-    private final List<ReportDelivery> reportDeliveries;
-
-    private ReportDelivery activeReportDelivery;
-
-    public Cli(
-        List<String> args,
-        DependencyFactory dependencyFactory,
-        Warehouse warehouse,
-        List<ReportDelivery> reportDeliveries) {
-        this.args = args;
-        this.dependencyFactory = dependencyFactory;
-        this.warehouse = warehouse;
-        this.reportDeliveries = reportDeliveries;
-
-        activeReportDelivery = reportDeliveries.get(0);
-
+    Cli() {
+        super();
         createReportDeliveryOptions();
     }
 

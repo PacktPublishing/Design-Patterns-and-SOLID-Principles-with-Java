@@ -9,7 +9,16 @@ import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
 import java.util.Properties;
 
+import static java.lang.System.getenv;
+
 public class EmailReportDelivery extends AbstractReportDelivery {
+
+    private static final String SMTP_HOST = getenv()
+        .getOrDefault("SMTP_HOST", "localhost");
+
+    private static final String SMTP_PORT = getenv()
+        .getOrDefault("SMTP_PORT", "2500");
+
 
     private final InternetAddress fromAddress = new InternetAddress("demo@example.com");
     private final InternetAddress toAddress;
@@ -21,7 +30,8 @@ public class EmailReportDelivery extends AbstractReportDelivery {
         this.toAddress = new InternetAddress(toAddress);
 
         prop = new Properties();
-        prop.put("mail.smtp.port", "2500");
+        prop.put("mail.smtp.host", SMTP_HOST);
+        prop.put("mail.smtp.port", SMTP_PORT);
     }
 
     @Override

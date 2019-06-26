@@ -1,6 +1,7 @@
 package com.example.warehouse.rest;
 
 import com.example.warehouse.Customer;
+import com.example.warehouse.Util;
 import com.example.warehouse.dal.CustomerDao;
 import com.example.warehouse.dal.DbCustomerDao;
 import com.google.gson.FieldNamingPolicy;
@@ -12,18 +13,22 @@ import com.google.gson.stream.JsonWriter;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONObject;
+import spark.servlet.SparkApplication;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.lang.System.getenv;
 import static java.util.stream.StreamSupport.stream;
 import static spark.Spark.get;
+import static spark.Spark.port;
 
-public class Rest {
+public class Rest implements Runnable, SparkApplication {
 
-    private static final String EXTERNAL_CUSTOMERS_URL = System.getProperty("EXTERNAL_CUSTOMERS_URL", "http://localhost:3000/customers");
+    private static final String EXTERNAL_CUSTOMERS_URL = getenv()
+        .getOrDefault("EXTERNAL_CUSTOMERS_URL", "http://localhost:3000/customers");
 
     private static final Gson GSON = new GsonBuilder()
         .setPrettyPrinting()
@@ -41,9 +46,15 @@ public class Rest {
         })
         .create();
 
-    public static void main(String[] args) {
-        CustomerDao dao = new DbCustomerDao();
+    @Override
+    public void run() {
+        port(Util.getPort());
+        init();
+    }
 
+    @Override
+    public void init() {
+        CustomerDao dao = new DbCustomerDao();
         get("/customers", (req, res) -> {
             Map<Integer, JSONObject> externalCustomers = fetchCustomers();
             return dao.getCustomers()
@@ -59,6 +70,10 @@ public class Rest {
             int id = Integer.valueOf(req.params(":id"));
             return mergeWithExternalCustomer(dao.getCustomer(id), fetchCustomer(id));
         }, GSON::toJson);
+    }
+
+    @Override
+    public void destroy() {
     }
 
     private static Map<Integer, JSONObject> fetchCustomers() throws UnirestException {
