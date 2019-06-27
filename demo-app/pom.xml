@@ -9,18 +9,6 @@
     <artifactId>demo-app</artifactId>
     <packaging>jar</packaging>
 
-    <profiles>
-        <profile>
-            <id>full</id>
-            <dependencies>
-                <dependency>
-                    <groupId>com.example</groupId>
-                    <artifactId>demo-app-full</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>com.example</groupId>
