@@ -35,4 +35,35 @@
             <artifactId>spark-template-velocity</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-webapp-maven-plugin</artifactId>
+                <configuration>
+                    <schemaVersion>V2</schemaVersion>
+                    <resourceGroup>design-patterns-warehouse-demo</resourceGroup>
+                    <appServicePlanName>design-patterns-warehouse-demo</appServicePlanName>
+                    <region>westeurope</region>
+                    <pricingTier>B1</pricingTier>
+                    <runtime>
+                        <os>linux</os>
+                        <javaVersion>java11</javaVersion>
+                        <webContainer>tomcat 9.0</webContainer>
+                    </runtime>
+                    <deployment>
+                        <resources>
+                            <resource>
+                                <directory>${project.basedir}/target</directory>
+                                <includes>
+                                    <include>*.war</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </deployment>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
