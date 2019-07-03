@@ -21,6 +21,12 @@ public class RestCustomerDao implements CustomerDao {
     private static final String CUSTOMERS_URL = System.getenv()
         .getOrDefault("CUSTOMERS_URL", "http://localhost:4567/customers");
 
+    private static final int CONNECT_TIMEOUT = Integer.valueOf(System.getenv()
+        .getOrDefault("CONNECT_TIMEOUT", "10000"));
+
+    private static final int READ_TIMEOUT = Integer.valueOf(System.getenv()
+        .getOrDefault("READ_TIMEOUT", "5000"));
+
     private static Customer toCustomer(JSONObject c) {
         return new Customer(c.getInt("id"),
             c.getString("name"),
@@ -58,8 +64,8 @@ public class RestCustomerDao implements CustomerDao {
 
     private String get(String url) throws IOException {
         URLConnection connection = new URL(url).openConnection();
-        connection.setConnectTimeout(1000);
-        connection.setReadTimeout(500);
+        connection.setConnectTimeout(CONNECT_TIMEOUT);
+        connection.setReadTimeout(READ_TIMEOUT);
         try (InputStream is = connection.getInputStream()) {
             return new String(is.readAllBytes());
         }
