@@ -43,8 +43,8 @@
                 <artifactId>azure-webapp-maven-plugin</artifactId>
                 <configuration>
                     <schemaVersion>V2</schemaVersion>
-                    <resourceGroup>design-patterns-warehouse-demo</resourceGroup>
-                    <appServicePlanName>design-patterns-warehouse-demo</appServicePlanName>
+                    <resourceGroup>warehouse-demo</resourceGroup>
+                    <appServicePlanName>warehouse-demo</appServicePlanName>
                     <region>westeurope</region>
                     <pricingTier>B1</pricingTier>
                     <runtime>
