@@ -18,7 +18,8 @@ import static java.util.stream.StreamSupport.stream;
 
 public class RestCustomerDao implements CustomerDao {
 
-    private static final String CUSTOMERS_URL = System.getProperty("CUSTOMERS_URL", "http://localhost:4567/customers");
+    private static final String CUSTOMERS_URL = System.getenv()
+        .getOrDefault("CUSTOMERS_URL", "http://localhost:4567/customers");
 
     private static Customer toCustomer(JSONObject c) {
         return new Customer(c.getInt("id"),
