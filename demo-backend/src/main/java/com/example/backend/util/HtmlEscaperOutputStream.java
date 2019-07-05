@@ -1,4 +1,4 @@
-package com.example.web.util;
+package com.example.backend.util;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
