@@ -41,6 +41,10 @@ public final class Warehouse {
             .collect(toUnmodifiableList());
     }
 
+    public Product getProduct(int id) throws WarehouseException {
+        return productDao.getProduct(id);
+    }
+
     public Collection<Customer> getCustomers() throws WarehouseException {
         return customerDao.getCustomers()
             .stream()
@@ -48,11 +52,19 @@ public final class Warehouse {
             .collect(toUnmodifiableList());
     }
 
+    public Customer getCustomer(int id) throws WarehouseException {
+        return customerDao.getCustomer(id);
+    }
+
     public Collection<Order> getOrders() throws WarehouseException {
         return orderDao.getOrders()
             .stream()
             .sorted(Comparator.comparing(Order::getId))
             .collect(toUnmodifiableList());
+    }
+
+    public Order getOrder(int id) throws WarehouseException {
+        return orderDao.getOrder(id);
     }
 
     public void addProduct(String name, int price) throws WarehouseException {
