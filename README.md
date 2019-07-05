@@ -9,3 +9,6 @@ Video course companion code.
 Changes since _Section 6_, _Video 4_.
 
 * Add `demo-func` Azure Function App project.
+* Add `OrderDao.getOrder(int)` method, implement the interface method in subclasses - `DbOrderDao` and `MemoryDbDao`.  
+* Add `Warehouse.get{Order,Product,Customer}(int)` methods.
+* Move Gson dependency to `demo-core` and create reusable `Util.newGson` util method.
