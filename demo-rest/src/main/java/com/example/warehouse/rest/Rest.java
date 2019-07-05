@@ -4,18 +4,12 @@ import com.example.warehouse.Customer;
 import com.example.warehouse.Util;
 import com.example.warehouse.dal.CustomerDao;
 import com.example.warehouse.dal.DbCustomerDao;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONObject;
 import spark.servlet.SparkApplication;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,21 +24,7 @@ public class Rest implements Runnable, SparkApplication {
     private static final String EXTERNAL_CUSTOMERS_URL = getenv()
         .getOrDefault("EXTERNAL_CUSTOMERS_URL", "http://localhost:3000/customers");
 
-    private static final Gson GSON = new GsonBuilder()
-        .setPrettyPrinting()
-        .setFieldNamingStrategy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .registerTypeAdapter(LocalDate.class, new TypeAdapter<LocalDate>() {
-            @Override
-            public void write(JsonWriter out, LocalDate value) throws IOException {
-                out.value(value.toString());
-            }
-
-            @Override
-            public LocalDate read(JsonReader in) throws IOException {
-                return LocalDate.parse(in.nextString());
-            }
-        })
-        .create();
+    private static final Gson GSON = Util.newGson();
 
     @Override
     public void run() {
