@@ -45,6 +45,11 @@ public final class MemoryOrderDao implements OrderDao {
     }
 
     @Override
+    public Order getOrder(int id) {
+        return orders.get(id);
+    }
+
+    @Override
     public synchronized void addOrder(Order order) {
         int max = orders.stream()
             .mapToInt(Order::getId)

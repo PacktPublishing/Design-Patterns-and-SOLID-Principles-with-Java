@@ -79,7 +79,6 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
     public Collection<Order> getOrders() throws WarehouseException {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
-            List<OrderRecord> results = new ArrayList<>();
             try (ResultSet rs = statement.executeQuery(
                 "SELECT "
                     + "o.id AS order_id, "
@@ -94,42 +93,77 @@ public final class DbOrderDao extends AbstractDbDao implements OrderDao {
                     "JOIN order_details AS od ON o.id = od.order_id " +
                     "JOIN products AS p ON p.id = od.product_id " +
                     "GROUP BY o.id, p.id")) {
-                while (rs.next()) {
-                    results.add(new OrderRecord(
-                        rs.getInt("order_id"),
-                        rs.getDate("order_date").toLocalDate(),
-                        rs.getBoolean("pending"),
-                        rs.getInt("customer_id"),
-                        rs.getInt("product_id"),
-                        rs.getString("product_name"),
-                        rs.getInt("price"),
-                        rs.getInt("quantity")
-                    ));
-                }
-                List<Order> orders = new ArrayList<>();
-                for (var group : results.stream().collect(Collectors.groupingBy(OrderRecord::getOrderId)).entrySet()) {
-                    int orderId = group.getKey();
-                    List<OrderRecord> records = group.getValue();
-                    OrderRecord firstRecord = records.get(0);
-
-                    Map<Product, Integer> quantities = records.stream()
-                        .collect(Collectors.groupingBy(
-                            or -> new Product(or.productId, or.productName, or.price),
-                            Collectors.summingInt(OrderRecord::getQuantity)));
-
-                    String customerName = customerDao.getCustomer(firstRecord.customerId).getName();
-                    orders.add(new Order(
-                        orderId,
-                        new Customer(firstRecord.customerId, customerName),
-                        firstRecord.orderDate,
-                        quantities,
-                        firstRecord.pending));
-                }
-                return orders;
+                return makeOrders(rs);
             }
         } catch (SQLException ex) {
             throw new WarehouseException("Trouble while fetching orders.", ex);
         }
+    }
+
+    @Override
+    public Order getOrder(int id) throws WarehouseException {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                 "SELECT "
+                     + "o.id AS order_id, "
+                     + "o.order_date, "
+                     + "o.pending, "
+                     + "o.customer_id AS customer_id, "
+                     + "p.id AS product_id, "
+                     + "p.name AS product_name, "
+                     + "p.price, "
+                     + "od.quantity " +
+                     "FROM orders AS o " +
+                     "JOIN order_details AS od ON o.id = od.order_id " +
+                     "JOIN products AS p ON p.id = od.product_id " +
+                     "WHERE o.customer_id = ? " +
+                     "GROUP BY o.id, p.id"
+             )) {
+            try (ResultSet rs = statement.executeQuery()) {
+                return makeOrders(rs)
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
+            }
+        } catch (SQLException ex) {
+            throw new WarehouseException("Trouble while fetching orders.", ex);
+        }
+    }
+
+    private List<Order> makeOrders(ResultSet rs) throws SQLException, WarehouseException {
+        List<OrderRecord> results = new ArrayList<>();
+        while (rs.next()) {
+            results.add(new OrderRecord(
+                rs.getInt("order_id"),
+                rs.getDate("order_date").toLocalDate(),
+                rs.getBoolean("pending"),
+                rs.getInt("customer_id"),
+                rs.getInt("product_id"),
+                rs.getString("product_name"),
+                rs.getInt("price"),
+                rs.getInt("quantity")
+            ));
+        }
+        List<Order> orders = new ArrayList<>();
+        for (var group : results.stream().collect(Collectors.groupingBy(OrderRecord::getOrderId)).entrySet()) {
+            int orderId = group.getKey();
+            List<OrderRecord> records = group.getValue();
+            OrderRecord firstRecord = records.get(0);
+
+            Map<Product, Integer> quantities = records.stream()
+                .collect(Collectors.groupingBy(
+                    or -> new Product(or.productId, or.productName, or.price),
+                    Collectors.summingInt(OrderRecord::getQuantity)));
+
+            String customerName = customerDao.getCustomer(firstRecord.customerId).getName();
+            orders.add(new Order(
+                orderId,
+                new Customer(firstRecord.customerId, customerName),
+                firstRecord.orderDate,
+                quantities,
+                firstRecord.pending));
+        }
+        return orders;
     }
 
     @Override

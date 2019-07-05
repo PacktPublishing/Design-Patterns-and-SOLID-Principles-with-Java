@@ -9,5 +9,7 @@ public interface OrderDao {
 
     Collection<Order> getOrders() throws WarehouseException;
 
+    Order getOrder(int id) throws WarehouseException;
+
     void addOrder(Order order) throws WarehouseException;
 }
