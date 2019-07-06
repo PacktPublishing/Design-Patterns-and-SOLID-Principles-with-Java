@@ -2,7 +2,9 @@ package com.example.web;
 
 import com.example.backend.Backend;
 import com.example.warehouse.Report;
+import com.example.warehouse.Warehouse;
 import com.example.warehouse.WarehouseException;
+import com.example.warehouse.Warehouses;
 import com.example.warehouse.export.ExportType;
 import com.example.warehouse.plot.ChartType;
 import spark.ModelAndView;
@@ -22,6 +24,11 @@ public final class Web extends Backend implements Runnable, SparkApplication {
 
     private static String render(Map<String, Object> model, String templatePath) {
         return VELOCITY_TEMPLATE_ENGINE.render(new ModelAndView(new HashMap<>(model), templatePath));
+    }
+
+    @Override
+    protected Warehouse getWarehouse(int clientId) {
+        return Warehouses.newFrontendWarehouse(clientId);
     }
 
     @Override

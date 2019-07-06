@@ -14,9 +14,5 @@
             <groupId>com.example</groupId>
             <artifactId>demo-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.konghq</groupId>
-            <artifactId>unirest-java</artifactId>
-        </dependency>
     </dependencies>
 </project>

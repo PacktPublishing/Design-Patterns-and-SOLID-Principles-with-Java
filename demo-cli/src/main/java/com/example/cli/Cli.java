@@ -110,6 +110,11 @@ public final class Cli extends App implements Runnable {
         createReportDeliveryOptions();
     }
 
+    @Override
+    protected Warehouse getWarehouse(int clientId) {
+        return Warehouses.newFrontendWarehouse(clientId);
+    }
+
     private void createReportDeliveryOptions() {
         int i;
         for (i = 0; i < reportDeliveries.size(); i++) {

@@ -2,30 +2,19 @@ package com.example.warehouse.dal;
 
 import com.example.warehouse.Customer;
 import com.example.warehouse.WarehouseException;
-import org.json.JSONArray;
+import kong.unirest.UnirestException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 
-public class RestCustomerDao implements CustomerDao {
+public class RestCustomerDao extends AbstractRestDao implements CustomerDao {
 
     private static final String CUSTOMERS_URL = System.getenv()
-        .getOrDefault("CUSTOMERS_URL", "http://localhost:4567/customers");
-
-    private static final int CONNECT_TIMEOUT = Integer.valueOf(System.getenv()
-        .getOrDefault("CONNECT_TIMEOUT", "10000"));
-
-    private static final int READ_TIMEOUT = Integer.valueOf(System.getenv()
-        .getOrDefault("READ_TIMEOUT", "5000"));
+        .getOrDefault("CUSTOMERS_URL", "http://localhost:9090/customers");
 
     private static Customer toCustomer(JSONObject c) {
         return new Customer(c.getInt("id"),
@@ -42,13 +31,11 @@ public class RestCustomerDao implements CustomerDao {
     @Override
     public Collection<Customer> getCustomers() throws WarehouseException {
         try {
-            JSONArray customers = new JSONArray(get(CUSTOMERS_URL));
-            return stream(customers.spliterator(), false)
-                .map(JSONObject.class::cast)
+            return getArray(CUSTOMERS_URL)
                 .map(RestCustomerDao::toCustomer)
                 .sorted(Comparator.comparing(Customer::getId))
                 .collect(toList());
-        } catch (IOException ex) {
+        } catch (UnirestException ex) {
             throw new WarehouseException("Problem while fetching customers from API.", ex);
         }
     }
@@ -56,18 +43,9 @@ public class RestCustomerDao implements CustomerDao {
     @Override
     public Customer getCustomer(int id) throws WarehouseException {
         try {
-            return toCustomer(new JSONObject(get(CUSTOMERS_URL + "/" + id)));
-        } catch (IOException ex) {
+            return toCustomer(getObject(CUSTOMERS_URL + "/" + id));
+        } catch (UnirestException ex) {
             throw new WarehouseException(String.format("Problem while fetching customer (%s) from API", id), ex);
-        }
-    }
-
-    private String get(String url) throws IOException {
-        URLConnection connection = new URL(url).openConnection();
-        connection.setConnectTimeout(CONNECT_TIMEOUT);
-        connection.setReadTimeout(READ_TIMEOUT);
-        try (InputStream is = connection.getInputStream()) {
-            return new String(is.readAllBytes());
         }
     }
 }

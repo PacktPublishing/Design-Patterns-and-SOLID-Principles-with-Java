@@ -20,7 +20,23 @@ public final class Warehouses {
             reportGeneration);
     }
 
-    public static Warehouse newDbWarehouse(int clientId) {
+    public static Warehouse newFrontendWarehouse(int clientId) {
+        ProductDao productDao = new RestProductDao();
+        CustomerDao customerDao = new RestCustomerDao();
+        InventoryDao inventoryDao = new DbInventoryDao();
+        OrderDao orderDao = new DbOrderDao(customerDao);
+
+        ReportGeneration reportGeneration = createReportGeneration(clientId, orderDao);
+
+        return new Warehouse(
+            productDao,
+            customerDao,
+            inventoryDao,
+            orderDao,
+            reportGeneration);
+    }
+
+    public static Warehouse newBackendWarehouse(int clientId) {
         ProductDao productDao = new DbProductDao();
         CustomerDao customerDao = new RestCustomerDao();
         InventoryDao inventoryDao = new DbInventoryDao();

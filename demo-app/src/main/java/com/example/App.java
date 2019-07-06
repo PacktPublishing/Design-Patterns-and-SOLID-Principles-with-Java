@@ -3,7 +3,6 @@ package com.example;
 import com.example.warehouse.DependencyFactory;
 import com.example.warehouse.DynamicDependencyFactory;
 import com.example.warehouse.Warehouse;
-import com.example.warehouse.Warehouses;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
@@ -35,7 +34,7 @@ public abstract class App implements Runnable {
         this.clientId = getClientId();
         this.dependencyFactory = new DynamicDependencyFactory();
 
-        warehouse = Warehouses.newDbWarehouse(clientId);
+        warehouse = getWarehouse(clientId);
 
         try {
             reportDeliveries = createReportDeliveries(clientId);
@@ -47,6 +46,8 @@ public abstract class App implements Runnable {
 
         activeReportDelivery = reportDeliveries.get(0);
     }
+
+    protected abstract Warehouse getWarehouse(int clientId);
 
     private static List<ReportDelivery> createReportDeliveries(int clientId) throws AddressException {
         List<ReportDelivery> result = new ArrayList<>();

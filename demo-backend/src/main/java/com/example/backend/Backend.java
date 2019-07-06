@@ -2,9 +2,7 @@ package com.example.backend;
 
 import com.example.App;
 import com.example.backend.util.HtmlEscaperOutputStream;
-import com.example.warehouse.Report;
-import com.example.warehouse.Util;
-import com.example.warehouse.WarehouseException;
+import com.example.warehouse.*;
 import com.example.warehouse.delivery.ReportDeliveryException;
 import com.example.warehouse.export.ExportType;
 import com.example.warehouse.export.Exporter;
@@ -26,6 +24,11 @@ public class Backend extends App implements Runnable, SparkApplication {
     private static final String CONTENT_TYPE = "application/json";
 
     private static final Gson GSON = Util.newGson();
+
+    @Override
+    protected Warehouse getWarehouse(int clientId) {
+        return Warehouses.newBackendWarehouse(clientId);
+    }
 
     @Override
     public final void run() {
