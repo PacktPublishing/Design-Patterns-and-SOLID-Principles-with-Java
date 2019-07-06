@@ -104,9 +104,9 @@
             </dependency>
             <!-- INFO: use to make REST API calls. -->
             <dependency>
-                <groupId>com.mashape.unirest</groupId>
+                <groupId>com.konghq</groupId>
                 <artifactId>unirest-java</artifactId>
-                <version>1.4.9</version>
+                <version>2.3.08</version>
             </dependency>
             <!-- INFO: used for JSON parsing. -->
             <dependency>

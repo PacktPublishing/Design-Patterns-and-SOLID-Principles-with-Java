@@ -5,8 +5,8 @@ import com.example.warehouse.Util;
 import com.example.warehouse.dal.CustomerDao;
 import com.example.warehouse.dal.DbCustomerDao;
 import com.google.gson.Gson;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import org.json.JSONObject;
 import spark.servlet.SparkApplication;
 

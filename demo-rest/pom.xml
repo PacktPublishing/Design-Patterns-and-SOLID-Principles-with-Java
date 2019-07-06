@@ -19,7 +19,7 @@
             <artifactId>spark-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.mashape.unirest</groupId>
+            <groupId>com.konghq</groupId>
             <artifactId>unirest-java</artifactId>
         </dependency>
         <dependency>

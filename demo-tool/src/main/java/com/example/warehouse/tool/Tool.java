@@ -4,9 +4,9 @@ import com.example.warehouse.Customer;
 import com.example.warehouse.WarehouseException;
 import com.example.warehouse.dal.CustomerDao;
 import com.example.warehouse.dal.RestCustomerDao;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import org.json.JSONArray;
 
 import java.util.Collection;
