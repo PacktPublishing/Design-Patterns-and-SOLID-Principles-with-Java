@@ -1,0 +1,25 @@
+#parse("templates/header.html.vm")
+<h2>Product list</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+    </tr>
+#foreach($product in $products)
+    <tr>
+        <td>$product.id</td>
+        <td>$product.name</td>
+        <td>$product.price</td>
+    </tr>
+#end
+</table>
+<h2>Add product</h2>
+<form action="/products/add" method="POST">
+    Enter the product's name:
+    <input type="text" name="name" required><br>
+    Enter the product's price:
+    <input type="number" name="price" min="0" required><br>
+    <input type="submit">
+</form>
+#parse("templates/footer.html.vm")

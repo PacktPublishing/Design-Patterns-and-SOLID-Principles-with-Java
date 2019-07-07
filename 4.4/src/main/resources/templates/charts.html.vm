@@ -1,0 +1,16 @@
+#parse("templates/header.html.vm")
+<h2>Report charts</h2>
+<ul>
+#foreach($reportType in $reportTypes)
+    <li>
+        $reportType.displayName:
+    #foreach($chartType in $chartTypes)
+        <a href="charts/plot?reportType=$reportType&chartType=$chartType">$chartType</a>
+        #if($foreach.hasNext)
+            ,
+        #end
+    #end
+    </li>
+#end
+</ul>
+#parse("templates/footer.html.vm")

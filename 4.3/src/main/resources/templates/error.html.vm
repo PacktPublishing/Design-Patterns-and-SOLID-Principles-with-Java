@@ -1,0 +1,4 @@
+#parse("templates/header.html.vm")
+<h2>$message</h2>
+<pre>$stacktrace</pre>
+#parse("templates/footer.html.vm")

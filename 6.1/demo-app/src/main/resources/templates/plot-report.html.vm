@@ -1,0 +1,7 @@
+#parse("templates/header.html.vm")
+#if ($error)
+    <h4 style="color: red;">$error</h4>
+#else
+    <img style="width: 70%;" src="data:image/png;base64,$data">
+#end
+#parse("templates/footer.html.vm")

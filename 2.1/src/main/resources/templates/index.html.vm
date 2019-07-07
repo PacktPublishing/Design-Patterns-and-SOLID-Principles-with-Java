@@ -1,0 +1,9 @@
+#parse("templates/header.html.vm")
+<h2>Manage</h2>
+<ul>
+    <li><a href="products">Products</a></li>
+    <li><a href="customers">Customers</a></li>
+    <li><a href="orders">Orders</a></li>
+</ul>
+</body>
+</html>

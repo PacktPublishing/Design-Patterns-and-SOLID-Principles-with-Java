@@ -1,0 +1,25 @@
+#parse("templates/header.html.vm")
+<h2>Customer list</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Company</th>
+    </tr>
+#foreach($customer in $customers)
+    <tr>
+        <td>$customer.id</td>
+        <td>$customer.name</td>
+        <td>$customer.company</td>
+    </tr>
+#end
+</table>
+<h2>Add customer</h2>
+<form action="/customers/add" method="POST">
+    Enter the customer's name:
+    <input type="text" name="name" required><br>
+    Enter the customer's company name:
+    <input type="text" name="company" required><br>
+    <input type="submit">
+</form>
+#parse("templates/footer.html.vm")

@@ -1,0 +1,8 @@
+#parse("templates/header.html.vm")
+<h2>Manage settings</h2>
+<ul>
+    <li>
+       <a href="settings/configure-report-delivery">Configure report delivery</a>
+    </li>
+</ul>
+#parse("templates/footer.html.vm")

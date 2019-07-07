@@ -1,0 +1,39 @@
+#parse("templates/header.html.vm")
+<h2>Order list</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Customer (ID)</th>
+        <th>Date</th>
+        <th>Total price</th>
+        <th>Pending?</th>
+    </tr>
+#foreach($order in $orders)
+    <tr>
+        <td>$order.id</td>
+        <td>$order.customer.name ($order.customer.id)</td>
+        <td>$order.date</td>
+        <td>$order.totalPrice</td>
+        <td>$order.pending</td>
+    </tr>
+#end
+</table>
+<h2>Add order</h2>
+<form action="/orders/add" method="POST">
+    Enter the customer's ID:
+    <input type="number" min=1 name="customerId" required><br>
+    Enter the product's ID:
+    <input type="number" name="productId" min="1" required><br>
+    Enter the desired quantity:
+    <input type="number" name="quantity" min="1" required><br>
+    Enter the product's ID:
+    <input type="number" name="productId" min="1"><br>
+    Enter the desired quantity:
+    <input type="number" name="quantity" min="1"><br>
+    Enter the product's ID:
+    <input type="number" name="productId" min="1"><br>
+    Enter the desired quantity:
+    <input type="number" name="quantity" min="1"><br>
+    <input type="submit">
+</form>
+#parse("templates/footer.html.vm")

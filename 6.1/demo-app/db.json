@@ -1,0 +1,88 @@
+{
+  "customers": [
+    {
+      "id": 12,
+      "date_of_birth": "1965-04-12",
+      "company": "Reichert Inc",
+      "phone": "864-393-9163",
+      "address": {
+        "street_address": "3793 Deer Haven Drive",
+        "city": "Fossil",
+        "state": "Oregon",
+        "zip_code": 97830
+      }
+    },
+    {
+      "id": 33,
+      "date_of_birth": "1977-01-28",
+      "company": "Haag Ltd",
+      "phone": "256-240-0094",
+      "address": {
+        "street_address": "3466 Ritter Street",
+        "city": "Anniston",
+        "state": "Alabama",
+        "zip_code": 36201
+      }
+    },
+    {
+      "id": 37,
+      "date_of_birth": "1980-07-02",
+      "company": "Romaguera and Sons",
+      "phone": "434-324-7644",
+      "address": {
+        "street_address": "2479 Worley Avenue",
+        "city": "Hurt",
+        "state": "Virginia",
+        "zip_code": 24563
+      }
+    },
+    {
+      "id": 41,
+      "date_of_birth": "1963-05-23",
+      "company": "Barton PLC",
+      "phone": "907-544-8675",
+      "address": {
+        "street_address": "4195 Jerry Toth Drive",
+        "city": "Anchorage",
+        "state": "Alaska",
+        "zip_code": 99509
+      }
+    },
+    {
+      "id": 67,
+      "date_of_birth": "1958-09-29",
+      "company": "Moen-Schaefer",
+      "phone": "914-382-6129",
+      "address": {
+        "street_address": "1360 Pallet Street",
+        "city": "Westbury",
+        "state": "New York",
+        "zip_code": 11590
+      }
+    },
+    {
+      "id": 88,
+      "date_of_birth": "1984-04-19",
+      "company": "Ritchie Group",
+      "phone": "617-555-5666",
+      "address": {
+        "street_address": "1403 Cedar Lane",
+        "city": "Port Neches",
+        "state": "Texas",
+        "zip_code": 77651
+      }
+    },
+    {
+      "id": 102,
+      "date_of_birth": "1977-10-31",
+      "company": "Feest LLC",
+      "phone": "703-605-2943",
+      "address": {
+        "street_address": "105 Cabell Avenue",
+        "city": "Arlington",
+        "state": "Virginia",
+        "zip_code": 22206
+      }
+    }
+  ]
+}

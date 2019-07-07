@@ -1,0 +1,12 @@
+#parse("templates/header.html.vm")
+<h2>Configure report delivery</h2>
+<ul>
+#foreach($reportDelivery in $reportDeliveries)
+    <li>
+        <form action="configure-report-delivery/$foreach.count" method="POST">
+           <a href="javascript:void" onclick="this.parentElement.submit()">Switch to '$reportDelivery.name'</a>
+        </form>
+    </li>
+#end
+</ul>
+#parse("templates/footer.html.vm")

@@ -1,0 +1,16 @@
+#parse("templates/header.html.vm")
+<h2>Export reports</h2>
+<ul>
+#foreach($reportType in $reportTypes)
+    <li>
+        $reportType.displayName:
+    #foreach($exportType in $exportTypes)
+        <a href="reports/export?reportType=$reportType&exportType=$exportType">$exportType</a>
+        #if($foreach.hasNext)
+            ,
+        #end
+    #end
+    </li>
+#end
+</ul>
+#parse("templates/footer.html.vm")
