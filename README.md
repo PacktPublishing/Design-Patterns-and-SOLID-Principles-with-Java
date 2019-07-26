@@ -4,9 +4,9 @@
 
 Video course companion code.
 
-## Section 6, Video 3
+## Section 6, Video 4
 
-Changes since _Section 6_, _Video 2_.
+Changes since _Section 6_, _Video 3_.
 
 * Split `demo-app` into two projects: `demo-cli` and `demo-web` .
 * Create new `Main` class for both new projects.
