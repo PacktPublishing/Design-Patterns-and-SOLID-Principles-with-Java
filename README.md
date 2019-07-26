@@ -15,7 +15,6 @@ Changes since _Section 6_, _Video 2_.
 * Turned the `demo-web` and `demo-rest` projects into WAR projects.
 * Add MySQL JDBC driver binaries as runtime dependency to related projects.
 * Add `azure-webapp-maven-plugin` to the project and configure it for the `demo-web` and `demo-rest` submodules.
-* Add `demo-func` Azure Function App project.
 * Add `OrderDao.getOrder(int)` method, implement the interface method in subclasses - `DbOrderDao` and `MemoryDbDao`.  
 * Add `Warehouse.get{Order,Product,Customer}(int)` methods.
 * Move Gson dependency to `demo-core` and create reusable `Util.newGson` util method.
