@@ -84,12 +84,6 @@
                 <artifactId>h2</artifactId>
                 <version>1.4.199</version>
             </dependency>
-            <!-- INFO: used to connect to MySQL databases in a cloud/production environment. -->
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.16</version>
-            </dependency>
             <!-- INFO: SLF4J's simple implementation is used to configure Spark's logging. -->
             <dependency>
                 <groupId>org.slf4j</groupId>
