@@ -13,7 +13,6 @@ Changes since _Section 6_, _Video 2_.
 * Refactor `App` to be the superclass of the `Cli` and `Web` classes.
 * Externalize configuration using environment variables where applicable - refactor `AbstractDbDao` and other classes.
 * Turned the `demo-web` and `demo-rest` projects into WAR projects.
-* Add MySQL JDBC driver binaries as runtime dependency to related projects.
 * Add `OrderDao.getOrder(int)` method, implement the interface method in subclasses - `DbOrderDao` and `MemoryDbDao`.  
 * Add `Warehouse.get{Order,Product,Customer}(int)` methods.
 * Move Gson dependency to `demo-core` and create reusable `Util.newGson` util method.
