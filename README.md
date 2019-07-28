@@ -4,13 +4,12 @@
 
 Video course companion code.
 
-## Section 6, Video 4
+## Section 6, Video 5
 
-Changes since _Section 6_, _Video 3_.
+Changes since _Section 6_, _Video 4_.
 
-* Add `demo-backend` project and new `Backend` class.
-* Add new factory methods to `Warehouses` - `newFrontendWarehouse` and `newBackendWarehouse`.
-* Refactor `App` and add new abstract method `getWarehouse(int)`.
-Update `Cli`, `Web` and `Backend` according to this.
-* Create `AbstractRestDao` and `ProductRestDao`, refactor `CustomerRestDao` to extend `AbstractRestDao`.
-* Fix a few miscellaneous problems (`Backend` getting NPE during exception translation, not handling `500` errors in `AbstractRestDao.getArray`).
+* Add `resilience4j` and `hazelcast`.
+* Use the Circuit Breaker and Cache-Aside Patterns.
+* Update `Warehouse` to use the patterns via `resilience4j`'s `Decorators` class. 
+* Implement customer deletion feature, extend `CustomerDao` interface with such a method.
+Retrofit interface implementations.
