@@ -1,5 +1,7 @@
 package com.example.warehouse.dal;
 
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import org.json.JSONArray;
@@ -13,8 +15,12 @@ import static java.util.stream.StreamSupport.stream;
 public class AbstractRestDao {
 
     protected Stream<JSONObject> getArray(String url) throws UnirestException {
-        JSONArray array = Unirest.get(url)
-            .asJson()
+        HttpResponse<JsonNode> res = Unirest.get(url)
+            .asJson();
+        if (!res.isSuccess()) {
+            throw new UnirestException(res.getStatusText());
+        }
+        JSONArray array = res
             .getBody()
             .getArray();
         return stream(array.spliterator(), false)
