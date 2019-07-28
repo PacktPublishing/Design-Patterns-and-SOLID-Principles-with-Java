@@ -73,7 +73,7 @@ public final class Web extends Backend implements Runnable, SparkApplication {
     private Object handleCustomers(Request req, Response res) throws WarehouseException {
         Map<String, Object> model = Map.of(
             "title", "Manage customers",
-            "customers", warehouse.getCustomers());
+            "customers", getCustomers());
         return render(model, "templates/customers.html.vm");
     }
 

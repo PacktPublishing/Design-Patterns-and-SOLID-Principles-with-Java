@@ -1,15 +1,19 @@
 package com.example;
 
-import com.example.warehouse.DependencyFactory;
-import com.example.warehouse.DynamicDependencyFactory;
-import com.example.warehouse.Warehouse;
+import com.example.warehouse.*;
 import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.decorators.Decorators;
 
 import javax.mail.internet.AddressException;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.lang.System.*;
@@ -21,6 +25,15 @@ public abstract class App implements Runnable {
 
     private static final String DESTINATION_DIRECTORY = getenv()
         .getOrDefault("DESTINATION_DIRECTORY", ".");
+
+    private static final CircuitBreakerConfig CBC = CircuitBreakerConfig.custom()
+        .ringBufferSizeInClosedState(3)
+        .ringBufferSizeInHalfOpenState(3)
+        .failureRateThreshold(50)
+        .waitDurationInOpenState(Duration.ofSeconds(10))
+        .build();
+
+    private static final CircuitBreaker CIRCUIT_BREAKER = CircuitBreaker.of("customers", CBC);
 
     protected final DependencyFactory dependencyFactory;
 
@@ -48,6 +61,18 @@ public abstract class App implements Runnable {
     }
 
     protected abstract Warehouse getWarehouse(int clientId);
+
+    protected Collection<Customer> getCustomers() throws WarehouseException {
+        try {
+            return Decorators.ofCheckedSupplier(warehouse::getCustomers)
+                .withCircuitBreaker(CIRCUIT_BREAKER)
+                .get();
+        } catch (WarehouseException | CallNotPermittedException ex) {
+            throw ex;
+        } catch (Throwable t) {
+            throw new IllegalStateException(t);
+        }
+    }
 
     private static List<ReportDelivery> createReportDeliveries(int clientId) throws AddressException {
         List<ReportDelivery> result = new ArrayList<>();

@@ -9,6 +9,7 @@ import com.example.warehouse.export.Exporter;
 import com.example.warehouse.export.util.CopyByteArrayOutputStream;
 import com.example.warehouse.plot.ChartPlotter;
 import com.example.warehouse.plot.ChartType;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -142,7 +143,7 @@ public final class Cli extends App implements Runnable {
                         doMenuAction(mainMenuChoice, subMenuChoice);
                     } catch (NumberFormatException ex) {
                         System.err.println("Invalid input. Enter a number.");
-                    } catch (WarehouseException | IllegalArgumentException | UnsupportedOperationException ex) {
+                    } catch (WarehouseException | IllegalArgumentException | UnsupportedOperationException | CallNotPermittedException ex) {
                         System.err.println(ex.getMessage());
                     }
                 }
@@ -369,7 +370,7 @@ public final class Cli extends App implements Runnable {
     }
 
     private void doCustomerList() throws WarehouseException {
-        Collection<Customer> customers = warehouse.getCustomers();
+        Collection<Customer> customers = getCustomers();
         int maxIdWidth = 0;
         int maxNameWidth = 0;
         for (Customer customer : customers) {
