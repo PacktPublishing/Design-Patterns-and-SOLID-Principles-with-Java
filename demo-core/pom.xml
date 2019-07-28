@@ -26,5 +26,9 @@
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-all</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+        </dependency>
     </dependencies>
 </project>

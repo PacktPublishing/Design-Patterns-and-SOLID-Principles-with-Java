@@ -120,11 +120,17 @@
                 <artifactId>gson</artifactId>
                 <version>2.8.5</version>
             </dependency>
-            <!-- INFO: used for the Circuit Breaker Pattern. -->
+            <!-- INFO: used for the Circuit Breaker and Cache-Aside Pattern. -->
             <dependency>
                 <groupId>io.github.resilience4j</groupId>
                 <artifactId>resilience4j-all</artifactId>
                 <version>0.17.0</version>
+            </dependency>
+            <!-- INFO: used as the JCache (JSR-107) implementation for the Cache-Aside Pattern. -->
+            <dependency>
+                <groupId>com.hazelcast</groupId>
+                <artifactId>hazelcast</artifactId>
+                <version>3.12.1</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>

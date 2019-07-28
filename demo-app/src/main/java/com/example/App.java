@@ -5,11 +5,14 @@ import com.example.warehouse.delivery.DirectoryReportDelivery;
 import com.example.warehouse.delivery.EmailReportDelivery;
 import com.example.warehouse.delivery.NoReportDelivery;
 import com.example.warehouse.delivery.ReportDelivery;
+import io.github.resilience4j.cache.Cache;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.decorators.Decorators;
 
+import javax.cache.CacheManager;
+import javax.cache.Caching;
 import javax.mail.internet.AddressException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -34,6 +37,8 @@ public abstract class App implements Runnable {
         .build();
 
     private static final CircuitBreaker CIRCUIT_BREAKER = CircuitBreaker.of("customers", CBC);
+
+    private static final CacheManager CACHE_MANAGER = Caching.getCachingProvider().getCacheManager();
 
     protected final DependencyFactory dependencyFactory;
 
@@ -65,8 +70,9 @@ public abstract class App implements Runnable {
     protected Collection<Customer> getCustomers() throws WarehouseException {
         try {
             return Decorators.ofCheckedSupplier(warehouse::getCustomers)
+                .withCache(Cache.of(CACHE_MANAGER.getCache("customers")))
                 .withCircuitBreaker(CIRCUIT_BREAKER)
-                .get();
+                .apply(0);
         } catch (WarehouseException | CallNotPermittedException ex) {
             throw ex;
         } catch (Throwable t) {

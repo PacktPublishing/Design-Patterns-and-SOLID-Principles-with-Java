@@ -1,8 +1,9 @@
 package com.example.warehouse;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public final class Customer {
+public final class Customer implements Serializable {
 
     private int id;
     private final String name;
