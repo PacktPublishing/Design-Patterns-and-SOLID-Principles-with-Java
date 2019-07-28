@@ -75,10 +75,13 @@ public class Backend extends App implements Runnable, SparkApplication {
     protected <T extends Exception> Map<String, Object> makeError(T t, Request req, Response res) {
         StringWriter writer = new StringWriter();
         t.printStackTrace(new PrintWriter(writer));
-        return Map.of(
-            "title", "Error",
-            "message", t.getMessage(),
-            "stacktrace", writer.toString());
+        Map<String, Object> map = new HashMap<>();
+        map.put("title", "Error");
+        map.put("stacktrace", writer.toString());
+        if (t.getMessage() != null) {
+            map.put("message", t.getMessage());
+        }
+        return map;
     }
 
     protected Map<String, Object> makeExportReport(Request req, Response res) throws WarehouseException {
