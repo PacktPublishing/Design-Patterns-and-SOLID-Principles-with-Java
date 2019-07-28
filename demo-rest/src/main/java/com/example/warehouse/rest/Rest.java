@@ -10,14 +10,17 @@ import kong.unirest.UnirestException;
 import org.json.JSONObject;
 import spark.servlet.SparkApplication;
 
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.System.getenv;
 import static java.util.stream.StreamSupport.stream;
-import static spark.Spark.get;
-import static spark.Spark.port;
+import static spark.Spark.*;
 
 public class Rest implements Runnable, SparkApplication {
 
@@ -25,6 +28,8 @@ public class Rest implements Runnable, SparkApplication {
         .getOrDefault("EXTERNAL_CUSTOMERS_URL", "http://localhost:3000/customers");
 
     private static final Gson GSON = Util.newGson();
+
+    private static final CacheManager CACHE_MANAGER = Caching.getCachingProvider().getCacheManager();
 
     @Override
     public void run() {
@@ -50,6 +55,14 @@ public class Rest implements Runnable, SparkApplication {
             int id = Integer.valueOf(req.params(":id"));
             return mergeWithExternalCustomer(dao.getCustomer(id), fetchCustomer(id));
         }, GSON::toJson);
+
+        delete("/customers/:id", (req, res) -> {
+            int id = Integer.valueOf(req.params(":id"));
+            dao.deleteCustomer(id);
+            Cache<Integer, Collection<Customer>> customers = CACHE_MANAGER.getCache("customers");
+            customers.remove(0);
+            return ""; // INFO: caller gets 404 when `null`.
+        });
     }
 
     @Override

@@ -10,4 +10,6 @@ public interface CustomerDao {
     Collection<Customer> getCustomers() throws WarehouseException;
 
     Customer getCustomer(int id) throws WarehouseException;
+
+    void deleteCustomer(int id) throws WarehouseException;
 }

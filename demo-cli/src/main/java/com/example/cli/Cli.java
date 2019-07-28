@@ -251,7 +251,7 @@ public final class Cli extends App implements Runnable {
         } else if (subMenuChoice == 3) {
             throw new UnsupportedOperationException("Updating customers Not yet implemented.");
         } else if (subMenuChoice == 4) {
-            throw new UnsupportedOperationException("Deleting customers not yet implemented.");
+            doDeleteCustomer();
         } else {
             throw new IllegalStateException("There are no such menu options, this cannot happen.");
         }
@@ -385,6 +385,17 @@ public final class Cli extends App implements Runnable {
         }
         String fmt = String.format("\t%%%ss\t\t%%%ss (%%s)%%n", maxIdWidth, maxNameWidth);
         customers.forEach(c -> System.out.printf(fmt, c.getId(), c.getName(), c.getCompany()));
+    }
+
+    private void doDeleteCustomer() throws WarehouseException {
+        int customerId;
+        try {
+            System.out.print("Enter the customer's ID and press RETURN: ");
+            customerId = Integer.valueOf(SCANNER.nextLine());
+        } catch (InputMismatchException ex) {
+            throw new IllegalArgumentException("The customer ID must be an integer.", ex);
+        }
+        warehouse.deleteCustomer(customerId);
     }
 
     private void doOrderList() throws WarehouseException {

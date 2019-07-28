@@ -48,4 +48,13 @@ public class RestCustomerDao extends AbstractRestDao implements CustomerDao {
             throw new WarehouseException(String.format("Problem while fetching customer (%s) from API", id), ex);
         }
     }
+
+    @Override
+    public void deleteCustomer(int id) throws WarehouseException {
+        try {
+            deleteObject(CUSTOMERS_URL + "/" + id);
+        } catch (UnirestException ex) {
+            throw new WarehouseException(String.format("Problem while deleting customer (%s) via API", id), ex);
+        }
+    }
 }

@@ -45,6 +45,19 @@ public final class DbCustomerDao extends AbstractDbDao implements CustomerDao {
         }
     }
 
+    @Override
+    public void deleteCustomer(int id) throws WarehouseException {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM customers WHERE id = ?")) {
+            statement.setInt(1, id);
+            if (statement.executeUpdate() != 1) {
+                throw new SQLException(String.format("Expected one customer with ID %s to be deleted.", id));
+            }
+        } catch (SQLException ex) {
+            throw new WarehouseException(String.format("Trouble while fetching customer (%s).", id), ex);
+        }
+    }
+
     private Customer toCustomer(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String name = rs.getString("name");

@@ -57,6 +57,10 @@ public class Backend extends App implements Runnable, SparkApplication {
         get("/customers", (req, res) -> warehouse.getCustomers(), GSON::toJson);
         get("/customers/:id", (req, res) -> warehouse.getCustomer(Integer.valueOf(req.params(":id"))), GSON::toJson);
         post("/customers", this::doAddCustomer, GSON::toJson);
+        delete("/customers/:id", (req, res) -> {
+            warehouse.deleteCustomer(Integer.valueOf(req.params(":id")));
+            return ""; // INFO: caller gets 404 when `null`.
+        });
 
         get("/orders", (req, res) -> warehouse.getOrders(), GSON::toJson);
         get("/orders/:id", (req, res) -> warehouse.getOrder(Integer.valueOf(req.params(":id"))), GSON::toJson);

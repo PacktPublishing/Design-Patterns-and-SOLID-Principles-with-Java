@@ -46,6 +46,7 @@ public final class Web extends Backend implements Runnable, SparkApplication {
         get("/settings/configure-report-delivery", this::handleConfigureReportDelivery);
         post("/products/add", this::handleAddProduct);
         post("/customers/add", this::handleAddCustomer);
+        post("/customers/delete", this::handleDeleteCustomer);
         post("/orders/add", this::handleAddOrder);
         post("/settings/configure-report-delivery/:choice", this::handleConfigureReportDelivery);
     }
@@ -134,6 +135,18 @@ public final class Web extends Backend implements Runnable, SparkApplication {
 
     private Object handleAddCustomer(Request req, Response res) {
         return doAddCustomer(req, res);
+    }
+
+    private Object handleDeleteCustomer(Request req, Response res) throws WarehouseException {
+        int customerId;
+        try {
+            customerId = Integer.valueOf(req.queryParams("customerId"));
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("The customer's ID must be an integer.", ex);
+        }
+        warehouse.deleteCustomer(customerId);
+        res.redirect("/customers");
+        return null;
     }
 
     private Object handleAddOrder(Request req, Response res) throws WarehouseException {

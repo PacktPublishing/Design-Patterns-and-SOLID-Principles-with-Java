@@ -45,6 +45,11 @@ public final class MemoryCustomerDao implements CustomerDao {
         return customer == null ? null : new Customer(customer);
     }
 
+    @Override
+    public void deleteCustomer(int id) {
+        customers.remove(id);
+    }
+
     private void readCustomers() throws FileNotFoundException, WarehouseException {
         CsvReader reader = new CsvReader(new FileInputStream(DEFAULT_CUSTOMERS_CSV_FILE));
         while (reader.hasNextRow()) {

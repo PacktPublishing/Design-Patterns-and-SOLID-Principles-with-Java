@@ -39,4 +39,12 @@ public class AbstractRestDao {
             .fields(params)
             .asEmpty();
     }
+
+    protected void deleteObject(String url) throws UnirestException {
+        HttpResponse res = Unirest.delete(url)
+            .asEmpty();
+        if (!res.isSuccess()) {
+            throw new UnirestException(res.getStatusText());
+        }
+    }
 }

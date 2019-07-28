@@ -75,6 +75,10 @@ public final class Warehouse {
         productDao.addProduct(product);
     }
 
+    public void deleteCustomer(int customerId) throws WarehouseException {
+        customerDao.deleteCustomer(customerId);
+    }
+
     public void addOrder(int customerId, Map<Integer, Integer> quantities) throws WarehouseException {
         if (quantities.isEmpty()) {
             throw new IllegalArgumentException("There has to items in the order, it cannot be empty.");

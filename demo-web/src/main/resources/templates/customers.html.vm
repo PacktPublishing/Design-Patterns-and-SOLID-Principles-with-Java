@@ -5,12 +5,19 @@
         <th>ID</th>
         <th>Name</th>
         <th>Company</th>
+        <th>Delete?</th>
     </tr>
 #foreach($customer in $customers)
     <tr>
         <td>$customer.id</td>
         <td>$customer.name</td>
         <td>$customer.company</td>
+        <td>
+            <form method="POST" action="customers/delete">
+                <input type="hidden" name="customerId" value="$customer.id">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
     </tr>
 #end
 </table>
