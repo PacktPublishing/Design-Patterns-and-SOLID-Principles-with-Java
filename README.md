@@ -16,7 +16,6 @@ By the end of the course, you will be able to identify (and confidently apply) d
 
 ## Instructions and Navigation
 ### Assumed Knowledge
-To fully benefit from the coverage included in this course, you will need:<br/>
 This course is for programmers/developers who have a basic knowledge of OOPs (preferably in Java) and are looking to refine their code through design patterns in their day-to-day coding practices.
 ### Technical Requirements <br/>
 For successful completion of this course, students will require the computer systems with at least the following:<br/>
