@@ -9,6 +9,7 @@ By the end of the course, you will be able to identify (and confidently apply) d
 <UL>
 •What design patterns are and why you should learn and use them <br/>
 •Understand and apply important design patterns such as the Template Method, the Strategy, the Singleton, the Facade, and the Factory Method <br/>
+•Learn about cloud design patterns such as the Strangler, the Circuit Breaker and the Cache-Aside patterns <br/>
 •Identify and avoid anti-patterns—for instance, using God objects or having a so-called pattern fetish <br/>
 •How and why to design modular and extensible code by exploring important SOLID principles <br/>
 •How to quickly refactor code that does not adhere to design best practices by using your favorite IDE <br/>
